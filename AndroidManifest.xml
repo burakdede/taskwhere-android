@@ -17,4 +17,6 @@
 		<activity android:name=".AddTaskActivity"/>
 		<activity android:name=".InfoActivity"/>
     </application>
+    
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
