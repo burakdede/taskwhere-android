@@ -56,8 +56,8 @@ public class TaskWhereActivity extends Activity {
     	TaskListDbAdapter dbAdapter = new TaskListDbAdapter(getApplicationContext());
     	dbAdapter.open();
     	
-    	dbAdapter.insertNewTask(new Task("do app test", "here", 40.82345,29.454656,23424));
-    	dbAdapter.insertNewTask(new Task("do app test2", "there", 20.83453636,19.453636,577878));
+    	dbAdapter.insertNewTask(new Task("do app test", "here", 40.82345, 29.454656, 23424));
+    	dbAdapter.insertNewTask(new Task("do app test2", "there", 20.83453636, 19.453636, 577878));
     	
     	Cursor taskCursor = dbAdapter.getAllTasks();
     	startManagingCursor(taskCursor);
@@ -68,9 +68,14 @@ public class TaskWhereActivity extends Activity {
     		
     		taskCursor.moveToFirst();
     		do{
-        		taskList.add(new Task(taskCursor.getString(0), taskCursor.getString(1),
-        				taskCursor.getDouble(2), taskCursor.getDouble(3), taskCursor.getInt(4)));
-        		taskCursor.moveToNext();
+    			Log.d(TW, "Task Text : " + taskCursor.getString(1));
+    			Log.d(TW, "Task Loc : " + taskCursor.getString(2));
+    			Log.d(TW, "Task Lat : " + taskCursor.getDouble(3));
+    			Log.d(TW, "Task Long : " + taskCursor.getDouble(4));
+    			Log.d(TW, "Task uniqueid : " + taskCursor.getInt(5));
+    			
+        		taskList.add(new Task(taskCursor.getString(1), taskCursor.getString(2),
+        				taskCursor.getDouble(3), taskCursor.getDouble(4), taskCursor.getInt(5)));
     		}while(taskCursor.moveToNext());
     	}
     }
@@ -105,8 +110,12 @@ public class TaskWhereActivity extends Activity {
 			
 			if(task != null){
 				
-				TextView trackData = (TextView) v.findViewById(R.id.taskText);
-				trackData.setText(task.getTaskText() + "-" + task.getTaskLoc());
+				TextView taskText = (TextView) v.findViewById(R.id.taskText);
+				taskText.setText(task.getTaskText());
+				Log.d(TW, "Task Test : " + task.getTaskText());
+				TextView taskLocView = (TextView) v.findViewById(R.id.taskLoc);
+				taskLocView.setText(task.getTaskLoc());
+				Log.d(TW, "Task Test : " + task.getTaskLoc());
 			}
 			
 			return v;

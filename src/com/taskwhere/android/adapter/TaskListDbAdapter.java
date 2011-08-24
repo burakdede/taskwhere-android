@@ -89,6 +89,6 @@ public class TaskListDbAdapter {
 	public Cursor getAllTasks() {
 
 		return db.query(DATABASE_TABLE, new String [] { KEY_ID, TASK_TEXT , TASK_LOC,
-				TASK_LAT, TASK_LON }, null, null, null, null, null, null);
+				TASK_LAT, TASK_LON, UNIQUEID }, null, null, null, null, null, null);
 	}
 }
