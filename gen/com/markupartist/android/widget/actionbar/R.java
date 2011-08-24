@@ -37,9 +37,10 @@ containing a value of this type.
         public static final int actionbar_btn=0x7f020002;
         public static final int actionbar_btn_normal=0x7f020003;
         public static final int actionbar_btn_pressed=0x7f020004;
-        public static final int ic_menu_tick=0x7f020005;
-        public static final int ic_title_home_default=0x7f020006;
+        public static final int add_item=0x7f020005;
+        public static final int home=0x7f020006;
         public static final int icon=0x7f020007;
+        public static final int info=0x7f020008;
     }
     public static final class id {
         public static final int actionbar=0x7f08000a;
@@ -58,7 +59,8 @@ containing a value of this type.
         public static final int actionbar=0x7f030000;
         public static final int actionbar_item=0x7f030001;
         public static final int addtask=0x7f030002;
-        public static final int main=0x7f030003;
+        public static final int info=0x7f030003;
+        public static final int main=0x7f030004;
     }
     public static final class string {
         public static final int actionbar_activity_not_found=0x7f060002;

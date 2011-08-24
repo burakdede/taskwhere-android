@@ -21,8 +21,7 @@ public class AddTaskActivity extends Activity{
 		setContentView(R.layout.addtask);
 
 		ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
-		actionBar.setHomeAction(new IntentAction(this, TaskWhereActivity.createIntent(this),R.drawable.ic_title_home_default));
-		
+		actionBar.setHomeAction(new IntentAction(this, TaskWhereActivity.createIntent(this),R.drawable.home));
 	}
 	
     public static Intent createIntent(Context context) {

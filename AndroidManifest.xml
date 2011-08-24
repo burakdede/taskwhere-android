@@ -15,5 +15,6 @@
         </activity>
 
 		<activity android:name=".AddTaskActivity"/>
+		<activity android:name=".InfoActivity"/>
     </application>
 </manifest>

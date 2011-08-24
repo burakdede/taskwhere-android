@@ -22,16 +22,18 @@ public class TaskWhereActivity extends Activity {
         setContentView(R.layout.main);
         
         ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
-        actionBar.setHomeAction(new IntentAction(this, createIntent(this),R.drawable.ic_title_home_default));
+        actionBar.setHomeAction(new IntentAction(this, createIntent(this),R.drawable.home));
         
-        final Action addAction = new IntentAction(this, AddTaskActivity.createIntent(this), R.drawable.ic_menu_tick);
+        final Action infoAction = new IntentAction(this, InfoActivity.createIntent(this), R.drawable.info);
+        actionBar.addAction(infoAction);
+        final Action addAction = new IntentAction(this, AddTaskActivity.createIntent(this), R.drawable.add_item);
         actionBar.addAction(addAction);
     }
     
     public static Intent createIntent(Context context) {
 		
-		Intent i = new Intent(context, TaskWhereActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    	Intent i = new Intent(context, TaskWhereActivity.class);
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         return i;
-	}
+    }
 }
