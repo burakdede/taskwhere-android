@@ -3,21 +3,61 @@
 	xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@drawable/bg">
+    android:layout_height="fill_parent">
 
 	<com.markupartist.android.widget.ActionBar
 	    android:id="@+id/actionbar"
-	    app:title="TW | Your Tasks"
+	    app:title="Task Where"
 	    style="@style/ActionBar"/>	  
+	
+	<LinearLayout
+	  android:orientation="horizontal"
+	  android:layout_width="fill_parent"
+	  android:layout_height="wrap_content"
+	  android:background="#F4F5ED">
+	
+		<TextView 
+			android:id="@+id/header1"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:layout_weight="1"
+			android:gravity="center_vertical|center_horizontal"
+			android:textStyle="bold"
+			android:textSize="16sp"
+			android:textColor="#17649A"
+			android:text="Status"
+			android:padding="5dip"/>
 	    
+	    <TextView 
+			android:id="@+id/header2"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:layout_weight="1"
+			android:gravity="center_vertical|center_horizontal"
+			android:textStyle="bold"
+			android:textSize="16sp"
+			android:textColor="#17649A"
+			android:text="Task"
+			android:padding="5dip"/>
+					
+		<TextView
+			android:id="@+id/header3"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:layout_weight="1"
+			android:textSize="16sp"
+			android:text="Location"
+			android:gravity="center_vertical|center_horizontal"
+			android:textStyle="bold"
+			android:textColor="#17649A"
+			android:padding="5dip"/>
+	</LinearLayout>   
+	
 	<ListView 
 		android:id="@+id/taskList"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:paddingTop="20dip"
-		android:paddingLeft="10dip"
-		android:paddingRight="10dip"
-		android:paddingBottom="10dip"/>
+		android:layout_height="wrap_content"
+		android:divider="@drawable/divider"
+		android:dividerHeight="1dp"/>
     
 </LinearLayout>

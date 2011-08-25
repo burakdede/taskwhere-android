@@ -28,6 +28,7 @@ public class TaskListDbAdapter {
 	public static final String TASK_LAT = "latitude";
 	public static final String TASK_LON = "longitude";
 	public static final String UNIQUEID = "uniqueid";
+	public static final String STATUS = "status";
 	
 	public TaskListDbAdapter(Context context) {
 
@@ -56,6 +57,7 @@ public class TaskListDbAdapter {
 		taskValues.put(TASK_LAT, task.getTaskLat());
 		taskValues.put(TASK_LON, task.getTaskLon());
 		taskValues.put(UNIQUEID, task.getUnique_taskid());
+		taskValues.put(STATUS, task.getStatus());
 		
 		return db.insert(DATABASE_TABLE, null, taskValues);
 	}
@@ -69,7 +71,7 @@ public class TaskListDbAdapter {
 		}
 		
 		private static final String DATABASE_CREATE = "create table " + DATABASE_TABLE + " (" + KEY_ID + " integer primary key autoincrement, " +
-			TASK_TEXT + " text not null ," + TASK_LOC + " text ,"+ TASK_LAT + " real ," + TASK_LON + " real ," + UNIQUEID + " integer );";
+			TASK_TEXT + " text not null ," + TASK_LOC + " text ,"+ TASK_LAT + " real ," + TASK_LON + " real ," + UNIQUEID + " integer ," + STATUS + " integer );";
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
@@ -89,6 +91,6 @@ public class TaskListDbAdapter {
 	public Cursor getAllTasks() {
 
 		return db.query(DATABASE_TABLE, new String [] { KEY_ID, TASK_TEXT , TASK_LOC,
-				TASK_LAT, TASK_LON, UNIQUEID }, null, null, null, null, null, null);
+				TASK_LAT, TASK_LON, UNIQUEID, STATUS }, null, null, null, null, null, null);
 	}
 }

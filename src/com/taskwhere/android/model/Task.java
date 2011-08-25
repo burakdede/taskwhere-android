@@ -10,7 +10,9 @@ public class Task {
 	
 	private double taskLon;
 	
-	private int unique_taskid;	
+	private int unique_taskid;
+	
+	private int status;
 
 	public Task() {}
 	
@@ -21,6 +23,12 @@ public class Task {
 		this.taskLat = taskLat;
 		this.taskLon = taskLon;
 		this.unique_taskid = unique_taskid;
+	}
+	
+	public Task(String taskText, String taskLoc, double taskLat, double taskLon, int unique_taskid,int status){
+		
+		this(taskText, taskLoc, taskLat, taskLon, unique_taskid);
+		this.status = status;
 	}
 
 	public String getTaskText() {
@@ -61,5 +69,19 @@ public class Task {
 
 	public void setUnique_taskid(int unique_taskid) {
 		this.unique_taskid = unique_taskid;
+	}
+	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+	
+	@Override
+	public String toString() {
+
+		return "Task Text : " + this.getTaskText() + " Task Loc : " + this.getTaskLoc() + " Task Status : " + this.getStatus();
 	}
 }

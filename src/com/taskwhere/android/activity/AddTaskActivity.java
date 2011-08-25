@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -23,6 +24,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -40,6 +42,7 @@ import com.markupartist.android.widget.ActionBar.IntentAction;
 
 public class AddTaskActivity extends MapActivity{
 
+	
 	private final static String TW = "TaskWhere";
 	private MapView locMapView;
 	private MapController mapController;
@@ -51,10 +54,10 @@ public class AddTaskActivity extends MapActivity{
 	private final static String SEARCH_REDIRECT = "search_redirect";
 	private final static String SEARCH_ADDRESS = "search_address";
 	
+	
 	boolean gpsEnabled;
 	boolean wirelessEnabled;
 	Location location;
-	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +72,7 @@ public class AddTaskActivity extends MapActivity{
 		final Action infoAction = new IntentAction(this, SearchAddressActivity.createIntent(this), R.drawable.search_magnifier);
         actionBar.addAction(infoAction);
         
-        final Action addAction = new IntentAction(this, AddTaskActivity.createIntent(this), R.drawable.accept_item);
+        final Action addAction = new IntentAction(this, createIntent(this), R.drawable.location);
         actionBar.addAction(addAction);
         
         locMapView = (MapView) findViewById(R.id.locMapView);
@@ -99,11 +102,13 @@ public class AddTaskActivity extends MapActivity{
     				
     				if(results != null){
     					if(results.size() >0){
-    						
+    						showDialog(1);
     						Address x = results.get(0);
+    						location = new Location(LocationManager.PASSIVE_PROVIDER);
     						location.setLatitude(x.getLatitude());
     						location.setLongitude(x.getLongitude());
     						updateWithNewLocation(location, marker);
+    						locMapView.requestFocus();
     					}
     				}
     			} catch (IOException e) {
@@ -116,33 +121,37 @@ public class AddTaskActivity extends MapActivity{
         }else{
         	
         	showDialog(1);
-    		
-    		String contenxt = Context.LOCATION_SERVICE;
-    		locationManager = (LocationManager) getSystemService(contenxt);
-    		
-    		gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    		wirelessEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-    		
-    		if(!gpsEnabled && !wirelessEnabled){
-    			
-    			Toast disableToast = Toast.makeText(getApplicationContext(), "Its seems both your GPS and WIFI is disabled", Toast.LENGTH_LONG);
-    			disableToast.show();
-    		}
-    		
-    		if (gpsEnabled) {
-    			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsLocationListener);
-    		}
-    		
-    		if(wirelessEnabled){
-    			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, networklocationListener);
-    		}
-    		
-    		Timer timerLoc = new Timer();
-    		timerLoc.schedule(new LocationTaks(), 10000);
+    		getCurrentLocation();
         }
         
 		me=new MyLocationOverlay(this, locMapView);
 		locMapView.getOverlays().add(me);
+	}
+
+	public void getCurrentLocation(){
+		
+		String contenxt = Context.LOCATION_SERVICE;
+		locationManager = (LocationManager) getSystemService(contenxt);
+		
+		gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+		wirelessEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+		
+		if(!gpsEnabled && !wirelessEnabled){
+			
+			Toast disableToast = Toast.makeText(getApplicationContext(), "Its seems both your GPS and WIFI is disabled", Toast.LENGTH_LONG);
+			disableToast.show();
+		}
+		
+		if (gpsEnabled) {
+			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsLocationListener);
+		}
+		
+		if(wirelessEnabled){
+			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, networklocationListener);
+		}
+		
+		Timer timerLoc = new Timer();
+		timerLoc.schedule(new LocationTaks(), 10000);
 	}
 	
     public static Intent createIntent(Context context) {
@@ -205,7 +214,9 @@ public class AddTaskActivity extends MapActivity{
 		
 		if(location != null){
 		
-			loadingDialog.dismiss();
+			if(loadingDialog != null)
+				loadingDialog.dismiss();
+			
 			locMapView.getOverlays().clear();
 			Double lat = location.getLatitude() * 1E6;
 			Double lon = location.getLongitude()* 1E6;
@@ -337,6 +348,8 @@ public class AddTaskActivity extends MapActivity{
 			boolean result=false;
 
 			if (action == MotionEvent.ACTION_DOWN) {
+				
+				mapView.getParent().requestDisallowInterceptTouchEvent(true);
 				for (OverlayItem item : items) {
 					Point p=new Point(0,0);
 
@@ -362,11 +375,13 @@ public class AddTaskActivity extends MapActivity{
 				}
 			}
 			else if (action == MotionEvent.ACTION_MOVE && inDrag!=null) {
+				mapView.getParent().requestDisallowInterceptTouchEvent(true);
 				setDragImagePosition(x, y);
 				result=true;
 			}
 			else if (action==MotionEvent.ACTION_UP && inDrag!=null) {
 				
+				mapView.getParent().requestDisallowInterceptTouchEvent(true);
 				Log.d(TW, "Dragging pin setting visibility gone");
 				dragImage.setVisibility(View.GONE);
 

@@ -1,13 +1,18 @@
 package com.taskwhere.android.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
@@ -18,6 +23,8 @@ public class SearchAddressActivity extends Activity {
 	private static boolean addressSearch;
 	private final static String SEARCH_REDIRECT = "search_redirect";
 	private final static String SEARCH_ADDRESS = "search_address";
+	private final static String TW = "Task Where";
+	private ProgressDialog loadingDialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,35 +43,42 @@ public class SearchAddressActivity extends Activity {
 		final Action infoAction = new IntentAction(this, cancelTaskIntent, R.drawable.delete_item);
         actionBar.addAction(infoAction);
         
-        final Intent accepTaskIntent = new Intent(this, AddTaskActivity.class);
-		accepTaskIntent.putExtra(SEARCH_REDIRECT, addressSearch);
-        accepTaskIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        final Action addAction = new IntentAction(this, accepTaskIntent, R.drawable.accept_item);
-        actionBar.addAction(addAction);
-        
         final EditText searchBar = (EditText) findViewById(R.id.searchBar);
-		searchBar.addTextChangedListener(new TextWatcher() {
+        
+        Button searchButton = (Button) findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				// TODO Auto-generated method stub
+			public void onClick(View v) {
+
+				if(!searchBar.getText().toString().equals("")){
+					
+					showDialog(1);
+					Log.d(TW, "Search is not empty");
+					Intent accepTaskIntent = new Intent();
+					accepTaskIntent.setClass(getApplicationContext(), AddTaskActivity.class);
+					accepTaskIntent.putExtra(SEARCH_ADDRESS, searchBar.getText().toString());
+					accepTaskIntent.putExtra(SEARCH_REDIRECT, addressSearch);
+			        accepTaskIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			        startActivity(accepTaskIntent);
+					
+				}else{
 				
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
-				accepTaskIntent.putExtra(SEARCH_ADDRESS, searchBar.getText().toString());
+					Log.d(TW, "Search is empty make toast and show");
+					Toast warn = Toast.makeText(getApplicationContext(), "Enter valid address to search", Toast.LENGTH_SHORT);
+				}
 			}
 		});
 	}
+	
+	@Override
+    protected Dialog onCreateDialog(int id) {
+    	
+		loadingDialog = ProgressDialog.show(SearchAddressActivity.this, "", "Searching location of given address...",true);
+    	loadingDialog.setCancelable(true);
+    	
+		return loadingDialog;
+    }
 	
     public static Intent createIntent(Context context) {
 		

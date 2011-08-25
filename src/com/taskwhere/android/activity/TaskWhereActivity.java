@@ -1,6 +1,7 @@
 package com.taskwhere.android.activity;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,12 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 import com.markupartist.android.widget.ActionBar.IntentAction;
+import com.taskwhere.android.adapter.TaskListAdapter;
 import com.taskwhere.android.adapter.TaskListDbAdapter;
 import com.taskwhere.android.model.Task;
 
@@ -50,15 +53,21 @@ public class TaskWhereActivity extends Activity {
         showSavedProfiles();
         
         taskListView = (ListView) findViewById(R.id.taskList);
-        taskListView.setDivider(null);
-        taskListView.setDividerHeight(10);
-        taskListView.setAdapter(new TaskListAdapter(getApplicationContext(), R.layout.task_item, taskList));
+        taskListView.setAdapter(new TaskListAdapter(this, taskList));
     }
     
     public void showSavedProfiles(){
     	
     	dbAdapter = new TaskListDbAdapter(getApplicationContext());
     	dbAdapter.open();
+    	
+    	Task task = new Task("Test Task 1", "Place1", 40.459459, 29.04545, 2343,0);
+    	Task task2 = new Task("Test Task 2", "Place2", 45.45454, 34.45454, 3234, 1);
+    	Task task3 = new Task("Test Task 3", "Place3", 42.3454, 45.3434, 3434,0);
+    	dbAdapter.insertNewTask(task);
+    	dbAdapter.insertNewTask(task2);
+    	dbAdapter.insertNewTask(task3);
+    	
     	
     	Cursor taskCursor = dbAdapter.getAllTasks();
     	startManagingCursor(taskCursor);
@@ -69,13 +78,8 @@ public class TaskWhereActivity extends Activity {
     		
     		taskCursor.moveToFirst();
     		do{
-    		//	Log.d(TW, "Task Text : " + taskCursor.getString(1));
-    		//	Log.d(TW, "Task Loc : " + taskCursor.getString(2));
-    		//	Log.d(TW, "Task Lat : " + taskCursor.getDouble(3));
-    		//	Log.d(TW, "Task Long : " + taskCursor.getDouble(4));
-    		//	Log.d(TW, "Task uniqueid : " + taskCursor.getInt(5));
         		taskList.add(new Task(taskCursor.getString(1), taskCursor.getString(2),
-        				taskCursor.getDouble(3), taskCursor.getDouble(4), taskCursor.getInt(5)));
+        				taskCursor.getDouble(3), taskCursor.getDouble(4), taskCursor.getInt(5),taskCursor.getInt(6)));
     		}while(taskCursor.moveToNext());
     	}
     	taskCursor.close();
@@ -92,40 +96,5 @@ public class TaskWhereActivity extends Activity {
     	Intent i = new Intent(context, TaskWhereActivity.class);
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         return i;
-    }
-    
-    private class TaskListAdapter extends ArrayAdapter<Task>{
-
-		public TaskListAdapter(Context context, int textViewResourceId,
-				ArrayList<Task> objects) {
-			super(context, textViewResourceId, objects);
-			context = getContext();
-			taskList = objects;
-		}
-    	
-    	@Override
-    	public View getView(int position, View convertView, ViewGroup parent) {
-    		
-    		View v = convertView;
-			
-			if(v == null){
-				LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				v = inflater.inflate(R.layout.task_item, null);
-			}
-			
-			Task task = taskList.get(position);
-			
-			if(task != null){
-				
-				TextView taskText = (TextView) v.findViewById(R.id.taskText);
-				taskText.setText(task.getTaskText());
-				Log.d(TW, "Task Test : " + task.getTaskText());
-				TextView taskLocView = (TextView) v.findViewById(R.id.taskLoc);
-				taskLocView.setText(task.getTaskLoc());
-				Log.d(TW, "Task Test : " + task.getTaskLoc());
-			}
-			
-			return v;
-    	}
     }
 }
