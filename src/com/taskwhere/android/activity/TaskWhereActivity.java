@@ -30,6 +30,7 @@ public class TaskWhereActivity extends Activity {
 	private ArrayList<Task> taskList;
 	private ListView taskListView;
 	private static ActionBar actionBar;
+	private TaskListDbAdapter dbAdapter;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,7 @@ public class TaskWhereActivity extends Activity {
     
     public void showSavedProfiles(){
     	
-    	TaskListDbAdapter dbAdapter = new TaskListDbAdapter(getApplicationContext());
+    	dbAdapter = new TaskListDbAdapter(getApplicationContext());
     	dbAdapter.open();
     	
     	Cursor taskCursor = dbAdapter.getAllTasks();
@@ -80,6 +81,13 @@ public class TaskWhereActivity extends Activity {
         				taskCursor.getDouble(3), taskCursor.getDouble(4), taskCursor.getInt(5)));
     		}while(taskCursor.moveToNext());
     	}
+    	taskCursor.close();
+    }
+    
+    @Override
+    protected void onDestroy() {
+    	super.onDestroy();
+    	dbAdapter.close();
     }
     
     public static Intent createIntent(Context context) {
