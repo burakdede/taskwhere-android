@@ -1,11 +1,13 @@
 package com.taskwhere.android.activity;
 
+import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +29,7 @@ public class TaskWhereActivity extends Activity {
 	private final static String TW = "TaskWhere";
 	private ArrayList<Task> taskList;
 	private ListView taskListView;
+	private static ActionBar actionBar;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,7 @@ public class TaskWhereActivity extends Activity {
         setContentView(R.layout.main);
         taskList = new ArrayList<Task>();
         
-        ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
+        actionBar = (ActionBar) findViewById(R.id.actionbar);
         actionBar.setHomeAction(new IntentAction(this, createIntent(this),R.drawable.home));
         
         final Action infoAction = new IntentAction(this, InfoActivity.createIntent(this), R.drawable.info);
@@ -48,6 +51,8 @@ public class TaskWhereActivity extends Activity {
         showSavedProfiles();
         
         taskListView = (ListView) findViewById(R.id.taskList);
+        taskListView.setDivider(null);
+        taskListView.setDividerHeight(10);
         taskListView.setAdapter(new TaskListAdapter(getApplicationContext(), R.layout.task_item, taskList));
     }
     
@@ -55,9 +60,6 @@ public class TaskWhereActivity extends Activity {
     	
     	TaskListDbAdapter dbAdapter = new TaskListDbAdapter(getApplicationContext());
     	dbAdapter.open();
-    	
-    	dbAdapter.insertNewTask(new Task("do app test", "here", 40.82345, 29.454656, 23424));
-    	dbAdapter.insertNewTask(new Task("do app test2", "there", 20.83453636, 19.453636, 577878));
     	
     	Cursor taskCursor = dbAdapter.getAllTasks();
     	startManagingCursor(taskCursor);

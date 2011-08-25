@@ -32,16 +32,21 @@ containing a value of this type.
         public static final int actionbar_item_width=0x7f050002;
     }
     public static final class drawable {
-        public static final int actionbar_back_indicator=0x7f020000;
-        public static final int actionbar_background=0x7f020001;
-        public static final int actionbar_btn=0x7f020002;
-        public static final int actionbar_btn_normal=0x7f020003;
-        public static final int actionbar_btn_pressed=0x7f020004;
-        public static final int add_item=0x7f020005;
-        public static final int background=0x7f020006;
-        public static final int home=0x7f020007;
-        public static final int icon=0x7f020008;
-        public static final int info=0x7f020009;
+        public static final int accept_item=0x7f020000;
+        public static final int actionbar_back_indicator=0x7f020001;
+        public static final int actionbar_background=0x7f020002;
+        public static final int actionbar_btn=0x7f020003;
+        public static final int actionbar_btn_normal=0x7f020004;
+        public static final int actionbar_btn_pressed=0x7f020005;
+        public static final int add_item=0x7f020006;
+        public static final int bg=0x7f020007;
+        public static final int home=0x7f020008;
+        public static final int icon=0x7f020009;
+        public static final int info=0x7f02000a;
+        public static final int list_item=0x7f02000b;
+        public static final int list_item_old=0x7f02000c;
+        public static final int marker=0x7f02000d;
+        public static final int search_magnifier=0x7f02000e;
     }
     public static final class id {
         public static final int actionbar=0x7f08000a;
@@ -54,18 +59,27 @@ containing a value of this type.
         public static final int actionbar_item=0x7f080009;
         public static final int actionbar_progress=0x7f080007;
         public static final int actionbar_title=0x7f080008;
+        public static final int drag=0x7f080012;
+        public static final int locMapView=0x7f080011;
         public static final int screen=0x7f080000;
-        public static final int taskList=0x7f08000b;
-        public static final int taskLoc=0x7f08000d;
-        public static final int taskText=0x7f08000c;
+        public static final int searchBar=0x7f08000b;
+        public static final int searchButton=0x7f08000c;
+        public static final int taskDetailEdit=0x7f080010;
+        public static final int taskDetailText=0x7f08000f;
+        public static final int taskList=0x7f080013;
+        public static final int taskLoc=0x7f080015;
+        public static final int taskLocEdit=0x7f08000e;
+        public static final int taskLocText=0x7f08000d;
+        public static final int taskText=0x7f080014;
     }
     public static final class layout {
         public static final int actionbar=0x7f030000;
         public static final int actionbar_item=0x7f030001;
-        public static final int addtask=0x7f030002;
-        public static final int info=0x7f030003;
-        public static final int main=0x7f030004;
-        public static final int task_item=0x7f030005;
+        public static final int address=0x7f030002;
+        public static final int addtask=0x7f030003;
+        public static final int info=0x7f030004;
+        public static final int main=0x7f030005;
+        public static final int task_item=0x7f030006;
     }
     public static final class string {
         public static final int actionbar_activity_not_found=0x7f060002;

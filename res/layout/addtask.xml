@@ -1,13 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/bg">
+    
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
   android:orientation="vertical"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent">
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
     
     <com.markupartist.android.widget.ActionBar
 	    android:id="@+id/actionbar"
-	    app:title="New Task"
+	    app:title="TaskWhere | Create Your New Task"
 	    style="@style/ActionBar"/>
+	    
+	<TextView 
+  		android:id="@+id/taskLocText"
+  		android:layout_height="wrap_content"
+  		android:layout_width="fill_parent"
+  		android:text="Location Name"
+  		android:textStyle="bold"
+		android:textSize="15sp"
+		android:padding="3dip"
+		android:textColor="#ffffff"
+  		android:gravity="center_vertical|center_horizontal"/>
+  	
+  	<EditText
+		android:id="@+id/taskLocEdit"
+	  	android:layout_width="fill_parent"
+	  	android:layout_height="wrap_content"
+	  	android:hint="Enter task location name here"
+	  	android:textSize="14sp"
+	  	android:lines="1"
+	  	android:layout_margin="5dip"
+	  	android:ellipsize="end"
+	  	android:scrollHorizontally="true"/>
+	  	
+	<TextView 
+  		android:id="@+id/taskDetailText"
+  		android:layout_height="wrap_content"
+  		android:layout_width="fill_parent"
+  		android:text="Your Task"
+  		android:textStyle="bold"
+		android:textSize="15sp"
+		android:padding="3dip"
+		android:textColor="#ffffff"
+  		android:gravity="center_vertical|center_horizontal"/>
+  	
+  	<EditText
+		android:id="@+id/taskDetailEdit"
+	  	android:layout_width="fill_parent"
+	  	android:layout_height="wrap_content"
+	  	android:hint="Enter your task info here"
+	  	android:textSize="14sp"
+	  	android:lines="3"
+	  	android:singleLine="false" 
+	  	android:gravity="top"
+	  	android:layout_margin="5dip"
+	  	android:ellipsize="end"
+	  	android:scrollHorizontally="true"/>
+	    
+	<com.google.android.maps.MapView
+		android:id="@+id/locMapView"
+        android:layout_width="fill_parent"
+        android:layout_height="250dip"
+        android:clickable="true"
+        android:layout_marginTop="10dip"
+        android:layout_marginBottom="30dip"
+        android:layout_marginLeft="15dip"
+        android:layout_marginRight="15dip"
+        android:apiKey="05iMxp8Mh8hqB-MSL7ars5LQU-XqYl_fYwB9FFg"/>
+        
+    <ImageView android:id="@+id/drag"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/marker"
+		android:layout_marginTop="20dip"
+		android:visibility="gone"/>
+        
 </LinearLayout>
+</ScrollView>

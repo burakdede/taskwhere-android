@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:background="@drawable/bg">
+  
+  <com.markupartist.android.widget.ActionBar
+	    android:id="@+id/actionbar"
+	    app:title="TaskWhere | Search Address"
+	    style="@style/ActionBar"/>
+  
+  <EditText 
+  	android:id="@+id/searchBar"
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:layout_margin="5dip"
+  	android:lines="5"
+  	android:hint="Enter the address you wanna search here"
+  	android:gravity="top"/>
+  
+  <Button 
+  	android:id="@+id/searchButton"
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:text="Show on Map"/>
+    
+</LinearLayout>
