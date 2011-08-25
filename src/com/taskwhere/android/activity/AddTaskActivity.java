@@ -1,5 +1,6 @@
 package com.taskwhere.android.activity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -12,6 +13,8 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -45,6 +48,8 @@ public class AddTaskActivity extends MapActivity{
 	private Drawable marker;
 	private LocationManager locationManager;
 	private ProgressDialog loadingDialog;
+	private final static String SEARCH_REDIRECT = "search_redirect";
+	private final static String SEARCH_ADDRESS = "search_address";
 	
 	boolean gpsEnabled;
 	boolean wirelessEnabled;
@@ -66,10 +71,8 @@ public class AddTaskActivity extends MapActivity{
         
         final Action addAction = new IntentAction(this, AddTaskActivity.createIntent(this), R.drawable.accept_item);
         actionBar.addAction(addAction);
-		
-		showDialog(1);
-		
-		locMapView = (MapView) findViewById(R.id.locMapView);
+        
+        locMapView = (MapView) findViewById(R.id.locMapView);
 		locMapView.setBuiltInZoomControls(true);
 		mapController = locMapView.getController();
 		
@@ -79,29 +82,65 @@ public class AddTaskActivity extends MapActivity{
 		marker = getResources().getDrawable(R.drawable.marker);
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(),marker.getIntrinsicHeight());
 		
-		String contenxt = Context.LOCATION_SERVICE;
-		locationManager = (LocationManager) getSystemService(contenxt);
-		
-		gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-		wirelessEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-		
-		if(!gpsEnabled && !wirelessEnabled){
-			
-			Toast disableToast = Toast.makeText(getApplicationContext(), "Its seems both your GPS and WIFI is disabled", Toast.LENGTH_LONG);
-			disableToast.show();
-		}
-		
-		if (gpsEnabled) {
-			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsLocationListener);
-		}
-		
-		if(wirelessEnabled){
-			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, networklocationListener);
-		}
-		
-		Timer timerLoc = new Timer();
-		timerLoc.schedule(new LocationTaks(), 10000);
-		
+        Bundle extras = getIntent().getExtras();
+        
+        
+        if(extras != null && extras.getBoolean(SEARCH_REDIRECT)){
+        	
+        	if(extras.getString(SEARCH_ADDRESS) != null){
+        		
+        		Log.d(TW, "Redirected from search activity just animate to point");
+            	String address = extras.getString(SEARCH_ADDRESS);
+            	Log.d(TW, "Search address : " + address);
+        		
+            	Geocoder gc = new Geocoder(getApplicationContext());
+            	try {
+    				List<Address> results = gc.getFromLocationName(address, 1);
+    				
+    				if(results != null){
+    					if(results.size() >0){
+    						
+    						Address x = results.get(0);
+    						location.setLatitude(x.getLatitude());
+    						location.setLongitude(x.getLongitude());
+    						updateWithNewLocation(location, marker);
+    					}
+    				}
+    			} catch (IOException e) {
+    				e.printStackTrace();
+    			}
+            	
+        	}else{
+        		Log.d(TW, "No address provided by user");
+        	}
+        }else{
+        	
+        	showDialog(1);
+    		
+    		String contenxt = Context.LOCATION_SERVICE;
+    		locationManager = (LocationManager) getSystemService(contenxt);
+    		
+    		gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    		wirelessEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    		
+    		if(!gpsEnabled && !wirelessEnabled){
+    			
+    			Toast disableToast = Toast.makeText(getApplicationContext(), "Its seems both your GPS and WIFI is disabled", Toast.LENGTH_LONG);
+    			disableToast.show();
+    		}
+    		
+    		if (gpsEnabled) {
+    			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsLocationListener);
+    		}
+    		
+    		if(wirelessEnabled){
+    			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, networklocationListener);
+    		}
+    		
+    		Timer timerLoc = new Timer();
+    		timerLoc.schedule(new LocationTaks(), 10000);
+        }
+        
 		me=new MyLocationOverlay(this, locMapView);
 		locMapView.getOverlays().add(me);
 	}

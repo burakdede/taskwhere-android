@@ -8,7 +8,7 @@
 
 	<com.markupartist.android.widget.ActionBar
 	    android:id="@+id/actionbar"
-	    app:title="TaskWhere | List Of Your Saved Tasks"
+	    app:title="TW | Your Tasks"
 	    style="@style/ActionBar"/>	  
 	    
 	<ListView 

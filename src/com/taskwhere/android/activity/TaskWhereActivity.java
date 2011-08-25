@@ -1,13 +1,11 @@
 package com.taskwhere.android.activity;
 
-import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -71,12 +69,11 @@ public class TaskWhereActivity extends Activity {
     		
     		taskCursor.moveToFirst();
     		do{
-    			Log.d(TW, "Task Text : " + taskCursor.getString(1));
-    			Log.d(TW, "Task Loc : " + taskCursor.getString(2));
-    			Log.d(TW, "Task Lat : " + taskCursor.getDouble(3));
-    			Log.d(TW, "Task Long : " + taskCursor.getDouble(4));
-    			Log.d(TW, "Task uniqueid : " + taskCursor.getInt(5));
-    			
+    		//	Log.d(TW, "Task Text : " + taskCursor.getString(1));
+    		//	Log.d(TW, "Task Loc : " + taskCursor.getString(2));
+    		//	Log.d(TW, "Task Lat : " + taskCursor.getDouble(3));
+    		//	Log.d(TW, "Task Long : " + taskCursor.getDouble(4));
+    		//	Log.d(TW, "Task uniqueid : " + taskCursor.getInt(5));
         		taskList.add(new Task(taskCursor.getString(1), taskCursor.getString(2),
         				taskCursor.getDouble(3), taskCursor.getDouble(4), taskCursor.getInt(5)));
     		}while(taskCursor.moveToNext());

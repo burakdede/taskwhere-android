@@ -4,8 +4,9 @@
   android:orientation="horizontal"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
-  android:paddingTop="10dip"  
+  android:paddingTop="10dip"
   android:background="@drawable/list_item">
+    
     
     <TextView 
 		android:id="@+id/taskText"

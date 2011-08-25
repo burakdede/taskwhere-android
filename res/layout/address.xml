@@ -9,7 +9,7 @@
   
   <com.markupartist.android.widget.ActionBar
 	    android:id="@+id/actionbar"
-	    app:title="TaskWhere | Search Address"
+	    app:title="Search Address"
 	    style="@style/ActionBar"/>
   
   <EditText 
@@ -17,14 +17,8 @@
   	android:layout_width="fill_parent"
   	android:layout_height="wrap_content"
   	android:layout_margin="5dip"
-  	android:lines="5"
+  	android:textSize="15sp"
+  	android:lines="6"
   	android:hint="Enter the address you wanna search here"
   	android:gravity="top"/>
-  
-  <Button 
-  	android:id="@+id/searchButton"
-  	android:layout_width="fill_parent"
-  	android:layout_height="wrap_content"
-  	android:text="Show on Map"/>
-    
 </LinearLayout>

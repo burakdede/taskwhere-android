@@ -14,14 +14,14 @@ xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
     
     <com.markupartist.android.widget.ActionBar
 	    android:id="@+id/actionbar"
-	    app:title="TaskWhere | Create Your New Task"
+	    app:title="TW | Create Task"
 	    style="@style/ActionBar"/>
 	    
 	<TextView 
   		android:id="@+id/taskLocText"
   		android:layout_height="wrap_content"
   		android:layout_width="fill_parent"
-  		android:text="Location Name"
+  		android:text="Task Location"
   		android:textStyle="bold"
 		android:textSize="15sp"
 		android:padding="3dip"
@@ -62,6 +62,17 @@ xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
 	  	android:layout_margin="5dip"
 	  	android:ellipsize="end"
 	  	android:scrollHorizontally="true"/>
+	  	
+	<TextView 
+  		android:id="@+id/taskMapText"
+  		android:layout_height="wrap_content"
+  		android:layout_width="fill_parent"
+  		android:text="Current Location"
+  		android:textStyle="bold"
+		android:textSize="15sp"
+		android:padding="3dip"
+		android:textColor="#ffffff"
+  		android:gravity="center_vertical|center_horizontal"/>
 	    
 	<com.google.android.maps.MapView
 		android:id="@+id/locMapView"
@@ -70,8 +81,8 @@ xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
         android:clickable="true"
         android:layout_marginTop="10dip"
         android:layout_marginBottom="30dip"
-        android:layout_marginLeft="15dip"
-        android:layout_marginRight="15dip"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
         android:apiKey="05iMxp8Mh8hqB-MSL7ars5LQU-XqYl_fYwB9FFg"/>
         
     <ImageView android:id="@+id/drag"

@@ -40,13 +40,15 @@ containing a value of this type.
         public static final int actionbar_btn_pressed=0x7f020005;
         public static final int add_item=0x7f020006;
         public static final int bg=0x7f020007;
-        public static final int home=0x7f020008;
-        public static final int icon=0x7f020009;
-        public static final int info=0x7f02000a;
-        public static final int list_item=0x7f02000b;
-        public static final int list_item_old=0x7f02000c;
-        public static final int marker=0x7f02000d;
-        public static final int search_magnifier=0x7f02000e;
+        public static final int bg_white=0x7f020008;
+        public static final int delete_item=0x7f020009;
+        public static final int home=0x7f02000a;
+        public static final int icon=0x7f02000b;
+        public static final int info=0x7f02000c;
+        public static final int list_item=0x7f02000d;
+        public static final int list_item_old=0x7f02000e;
+        public static final int marker=0x7f02000f;
+        public static final int search_magnifier=0x7f020010;
     }
     public static final class id {
         public static final int actionbar=0x7f08000a;
@@ -63,13 +65,13 @@ containing a value of this type.
         public static final int locMapView=0x7f080011;
         public static final int screen=0x7f080000;
         public static final int searchBar=0x7f08000b;
-        public static final int searchButton=0x7f08000c;
-        public static final int taskDetailEdit=0x7f080010;
-        public static final int taskDetailText=0x7f08000f;
+        public static final int taskDetailEdit=0x7f08000f;
+        public static final int taskDetailText=0x7f08000e;
         public static final int taskList=0x7f080013;
         public static final int taskLoc=0x7f080015;
-        public static final int taskLocEdit=0x7f08000e;
-        public static final int taskLocText=0x7f08000d;
+        public static final int taskLocEdit=0x7f08000d;
+        public static final int taskLocText=0x7f08000c;
+        public static final int taskMapText=0x7f080010;
         public static final int taskText=0x7f080014;
     }
     public static final class layout {
