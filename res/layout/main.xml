@@ -10,13 +10,13 @@
 	    android:id="@+id/actionbar"
 	    app:title="Task Where"
 	    style="@style/ActionBar"/>	  
-	
+
 	<LinearLayout
 	  android:orientation="horizontal"
 	  android:layout_width="fill_parent"
 	  android:layout_height="wrap_content"
 	  android:background="@drawable/task_item_general_selector">
-	
+
 		<TextView 
 			android:id="@+id/header1"
 			android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
 			android:text="Status"
 			android:padding="5dip"
 			style="@style/TaskListHeaderTitle"/>
-	    
+
 	    <TextView 
 			android:id="@+id/header2"
 			android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
 			android:text="Task"
 			android:padding="5dip"
 			style="@style/TaskListHeaderTitle"/>
-					
+
 		<TextView
 			android:id="@+id/header3"
 			android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
 			android:padding="5dip"
 			style="@style/TaskListHeaderTitle"/>
 	</LinearLayout>   
-	
+
 	<ListView 
 		android:id="@+id/taskList"
 		android:layout_width="fill_parent"
@@ -56,5 +56,4 @@
     	android:fadingEdgeLength="0dip"
 		android:drawSelectorOnTop="false"
 		android:dividerHeight="0dip"/>
-    
 </LinearLayout>

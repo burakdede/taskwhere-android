@@ -96,10 +96,10 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 		
 		//make location looks linkfied so that user can edit
 		holder.taskLoc.setText("@" + task.getTaskLoc(),BufferType.SPANNABLE);
-		holder.taskLoc.setLinkTextColor(R.color.grey_start);
-		Pattern placeMatcher = Pattern.compile("\\B@[^:\\s]+");
-		String placeViewURL = "place://";
-		Linkify.addLinks(holder.taskLoc, placeMatcher, placeViewURL);
+//		holder.taskLoc.setLinkTextColor(R.color.grey_start);
+//		Pattern placeMatcher = Pattern.compile("\\B@[^:\\s]+");
+//		String placeViewURL = "place://";
+//		Linkify.addLinks(holder.taskLoc, placeMatcher, placeViewURL);
 		
 		return v;
 	}

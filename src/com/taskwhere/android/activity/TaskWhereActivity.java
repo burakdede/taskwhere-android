@@ -8,9 +8,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.webkit.WebChromeClient.CustomViewCallback;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
@@ -18,6 +24,8 @@ import com.markupartist.android.widget.ActionBar.IntentAction;
 import com.taskwhere.android.adapter.TaskListAdapter;
 import com.taskwhere.android.adapter.TaskListDbAdapter;
 import com.taskwhere.android.model.Task;
+import com.taskwhere.android.widget.ActionItem;
+import com.taskwhere.android.widget.QuickAction;
 
 /**
  * 
@@ -34,6 +42,8 @@ public class TaskWhereActivity extends Activity {
 	private static ActionBar actionBar;
 	private TaskListDbAdapter dbAdapter;
 	private Cursor taskCursor;
+	private Button testButton;
+	private int mSelectedRow = 0;
 	
 	/**
 	 * setup actionbar pattern using {@link ActionBar}
@@ -59,6 +69,56 @@ public class TaskWhereActivity extends Activity {
         	showSavedProfiles();
             taskListView = (ListView) findViewById(R.id.taskList);
             taskListView.setAdapter(new TaskListAdapter(this, taskList));
+            
+            //Add action item
+        	ActionItem addAction = new ActionItem();
+		
+			addAction.setTitle("Add");
+			addAction.setIcon(getResources().getDrawable(R.drawable.ic_add));
+	
+			//Accept action item
+			ActionItem accAction = new ActionItem();
+			
+			accAction.setTitle("Accept");
+			accAction.setIcon(getResources().getDrawable(R.drawable.ic_accept));
+			
+			//Upload action item
+			ActionItem upAction = new ActionItem();
+			
+			upAction.setTitle("Upload");
+			upAction.setIcon(getResources().getDrawable(R.drawable.ic_up));
+			
+			final QuickAction mQuickAction 	= new QuickAction(this);
+			
+			mQuickAction.addActionItem(addAction);
+			mQuickAction.addActionItem(accAction);
+			mQuickAction.addActionItem(upAction);
+
+			
+			//setup the action item click listener
+			mQuickAction.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {			
+				@Override
+				public void onItemClick(int pos) {
+					
+					if (pos == 0) { //Add item selected
+						Toast.makeText(TaskWhereActivity.this, "Add item selected on row " + mSelectedRow, Toast.LENGTH_SHORT).show();
+					} else if (pos == 1) { //Accept item selected
+						Toast.makeText(TaskWhereActivity.this, "Accept item selected on row " + mSelectedRow, Toast.LENGTH_SHORT).show();
+					} else if (pos == 2) { //Upload item selected
+						Toast.makeText(TaskWhereActivity.this, "Upload items selected on row " + mSelectedRow, Toast.LENGTH_SHORT).show();
+					}	
+				}
+			});
+
+			taskListView.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View view,
+						int arg2, long arg3) {
+					mSelectedRow = arg2;
+					mQuickAction.show(view);
+				}
+			});
         }
         
         
@@ -79,14 +139,7 @@ public class TaskWhereActivity extends Activity {
      */
     public void showSavedProfiles(){
     	
-    /*	Task task = new Task("Test Task 1", "Place1", 40.459459, 29.04545, 2343,0);
-    	Task task2 = new Task("Test Task 2", "Place2", 45.45454, 34.45454, 3234, 1);
-    	Task task3 = new Task("Test Task 3", "Place3", 42.3454, 45.3434, 3434,0);
-    	dbAdapter.insertNewTask(task);
-    	dbAdapter.insertNewTask(task2);
-    	dbAdapter.insertNewTask(task3); */
     	startManagingCursor(taskCursor);
-    	
     	Log.d(TW, "Cursor count : " + taskCursor.getCount());
     	
     	if(taskCursor.getCount() > 0){
