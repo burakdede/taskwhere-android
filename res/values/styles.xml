@@ -5,8 +5,19 @@
   	</style>
   	
   	<style name="TaskTextViewStyle">
-    <item name="android:textSize">15dip</item>
-    <item name="android:textStyle">bold</item>
-    <item name="android:textColor">@color/black_end</item>
+    	<item name="android:textSize">15dip</item>
+    	<item name="android:textStyle">bold</item>
+   		<item name="android:textColor">@color/black_end</item>
+  	</style>
+  	
+  	<style name="TaskLocViewStyle">
+    	<item name="android:textSize">13dip</item>
+    	<item name="android:textColor">@color/dgrey_start</item>
+  	</style>
+  	
+  	<style name="TaskListHeaderTitle">
+	    <item name="android:textSize">15dip</item>
+	    <item name="android:textColor">@color/white</item>
+	    <item name="android:textStyle">bold</item>
   	</style>
 </resources>

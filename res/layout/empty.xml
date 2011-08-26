@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:background="@drawable/listview_item_manual">
+    
+    <com.markupartist.android.widget.ActionBar
+	    android:id="@+id/actionbar"
+	    app:title="Task Where"
+	    style="@style/ActionBar"/>
+	 
+	 
+	 <ImageView 
+	 	android:id="@+id/emptyMan"
+	 	android:layout_height="wrap_content"
+	 	android:layout_width="wrap_content"
+	 	android:src="@drawable/empty_back"
+	 	android:paddingLeft="60dip"
+	 	android:paddingRight="25dip"
+	 	android:paddingTop="80dip"/>  
+	    
+</RelativeLayout>

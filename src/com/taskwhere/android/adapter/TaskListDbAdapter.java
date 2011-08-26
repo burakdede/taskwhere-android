@@ -89,6 +89,16 @@ public class TaskListDbAdapter {
 	
 	/**
 	 * 
+	 * @param locationName
+	 * @return {@link Cursor}
+	 */
+	public Cursor getTaskByLocationName(String locationName){
+		
+		return db.query(DATABASE_TABLE, null, TASK_LOC + "=" + "\""+ locationName +"\"", null, null, null, null);
+	}
+	
+	/**
+	 * 
 	 * @author burak
 	 * @date 26 Aug 2011
 	 * 

@@ -15,7 +15,14 @@
             </intent-filter>
         </activity>
 
-		<activity android:name=".AddTaskActivity" android:windowSoftInputMode="stateHidden"/>
+		<activity android:name=".AddTaskActivity" android:windowSoftInputMode="stateHidden">
+			<intent-filter>
+	            <category android:name="android.intent.category.DEFAULT"/> 
+	            <action android:name="android.intent.action.VIEW" /> 
+	            <data android:scheme="place" /> 
+            </intent-filter>
+		</activity>
+		
 		<activity android:name=".InfoActivity"/>
 		<activity android:name=".SearchAddressActivity"/>
 		

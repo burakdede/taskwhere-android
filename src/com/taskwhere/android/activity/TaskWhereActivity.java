@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
+import android.webkit.WebChromeClient.CustomViewCallback;
 import android.widget.ListView;
 
 import com.markupartist.android.widget.ActionBar;
@@ -32,6 +33,7 @@ public class TaskWhereActivity extends Activity {
 	private ListView taskListView;
 	private static ActionBar actionBar;
 	private TaskListDbAdapter dbAdapter;
+	private Cursor taskCursor;
 	
 	/**
 	 * setup actionbar pattern using {@link ActionBar}
@@ -42,9 +44,23 @@ public class TaskWhereActivity extends Activity {
     	
     	requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.main);
-        setContentView(R.layout.main);
+        
+        
         taskList = new ArrayList<Task>();
+        openDatabaseAccess();
+        taskCursor = dbAdapter.getAllTasks();
+        
+        if(taskCursor.getCount() == 0){
+        	getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.empty);
+        	setContentView(R.layout.empty);
+        }else{
+        	getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.main);
+        	setContentView(R.layout.main);
+        	showSavedProfiles();
+            taskListView = (ListView) findViewById(R.id.taskList);
+            taskListView.setAdapter(new TaskListAdapter(this, taskList));
+        }
+        
         
         //set actionbar intents and activities accordingly
         actionBar = (ActionBar) findViewById(R.id.actionbar);
@@ -54,10 +70,7 @@ public class TaskWhereActivity extends Activity {
         final Action addAction = new IntentAction(this, AddTaskActivity.createIntent(this), R.drawable.add_item);
         actionBar.addAction(addAction);
         
-        showSavedProfiles();
         
-        taskListView = (ListView) findViewById(R.id.taskList);
-        taskListView.setAdapter(new TaskListAdapter(this, taskList));
     }
     
     /**
@@ -66,17 +79,12 @@ public class TaskWhereActivity extends Activity {
      */
     public void showSavedProfiles(){
     	
-    	dbAdapter = new TaskListDbAdapter(getApplicationContext());
-    	dbAdapter.open();
-    	
     /*	Task task = new Task("Test Task 1", "Place1", 40.459459, 29.04545, 2343,0);
     	Task task2 = new Task("Test Task 2", "Place2", 45.45454, 34.45454, 3234, 1);
     	Task task3 = new Task("Test Task 3", "Place3", 42.3454, 45.3434, 3434,0);
     	dbAdapter.insertNewTask(task);
     	dbAdapter.insertNewTask(task2);
     	dbAdapter.insertNewTask(task3); */
-    	
-    	Cursor taskCursor = dbAdapter.getAllTasks();
     	startManagingCursor(taskCursor);
     	
     	Log.d(TW, "Cursor count : " + taskCursor.getCount());
@@ -92,6 +100,13 @@ public class TaskWhereActivity extends Activity {
     	if(taskCursor != null)
     		taskCursor.close();
     }
+    
+    
+    public void openDatabaseAccess(){
+    	dbAdapter = new TaskListDbAdapter(getApplicationContext());
+    	dbAdapter.open();
+    }
+    
     
     /**
      * do some database cleanup

@@ -15,7 +15,7 @@
 	  android:orientation="horizontal"
 	  android:layout_width="fill_parent"
 	  android:layout_height="wrap_content"
-	  android:background="#F4F5ED">
+	  android:background="@drawable/task_item_general_selector">
 	
 		<TextView 
 			android:id="@+id/header1"
@@ -23,11 +23,9 @@
 			android:layout_width="fill_parent"
 			android:layout_weight="1"
 			android:gravity="center_vertical|center_horizontal"
-			android:textStyle="bold"
-			android:textSize="16sp"
-			android:textColor="#17649A"
 			android:text="Status"
-			android:padding="5dip"/>
+			android:padding="5dip"
+			style="@style/TaskListHeaderTitle"/>
 	    
 	    <TextView 
 			android:id="@+id/header2"
@@ -35,23 +33,19 @@
 			android:layout_width="fill_parent"
 			android:layout_weight="1"
 			android:gravity="center_vertical|center_horizontal"
-			android:textStyle="bold"
-			android:textSize="16sp"
-			android:textColor="#17649A"
 			android:text="Task"
-			android:padding="5dip"/>
+			android:padding="5dip"
+			style="@style/TaskListHeaderTitle"/>
 					
 		<TextView
 			android:id="@+id/header3"
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
 			android:layout_weight="1"
-			android:textSize="16sp"
 			android:text="Location"
 			android:gravity="center_vertical|center_horizontal"
-			android:textStyle="bold"
-			android:textColor="#17649A"
-			android:padding="5dip"/>
+			android:padding="5dip"
+			style="@style/TaskListHeaderTitle"/>
 	</LinearLayout>   
 	
 	<ListView 

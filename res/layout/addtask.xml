@@ -14,8 +14,18 @@ xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
     
     <com.markupartist.android.widget.ActionBar
 	    android:id="@+id/actionbar"
-	    app:title="New Task"
+	    app:title="Task Where"
 	    style="@style/ActionBar"/>
+	    
+	<TextView 
+		android:id="@+id/taskHeader"
+		android:layout_width="fill_parent"
+		android:layout_height="30dip"
+		android:text="Create New Task"
+		android:gravity="center_vertical"
+		android:paddingLeft="5dip"
+		style="@style/TaskListHeaderTitle"
+		android:background="@drawable/task_item_general_selector"/>
 	    
 	<TextView 
   		android:id="@+id/taskLocText"
@@ -36,8 +46,8 @@ xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
 	  	android:hint="Enter task location name here"
 	  	android:textSize="14sp"
 	  	android:lines="1"
-	  	android:layout_marginLeft="5dip"
-	  	android:layout_marginRight="5dip"
+	  	android:layout_marginLeft="10dip"
+	  	android:layout_marginRight="10dip"
 	  	android:ellipsize="end"
 	  	android:scrollHorizontally="true"/>
 	  	
@@ -59,11 +69,8 @@ xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
 	  	android:layout_height="wrap_content"
 	  	android:hint="Enter your task info here"
 	  	android:textSize="14sp"
-	  	android:lines="3"
-	  	android:singleLine="false" 
-	  	android:gravity="top"
-		android:layout_marginLeft="5dip"
-	  	android:layout_marginRight="5dip"
+		android:layout_marginLeft="10dip"
+	  	android:layout_marginRight="10dip"
 		android:ellipsize="end"
 	  	android:scrollHorizontally="true"/>
 	  	
@@ -85,9 +92,9 @@ xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
         android:layout_height="250dip"
         android:clickable="true"
         android:layout_marginTop="5dip"
-        android:layout_marginLeft="10dip"
-        android:layout_marginRight="10dip"
-        android:layout_marginBottom="3dip"
+        android:layout_marginLeft="15dip"
+        android:layout_marginRight="15dip"
+        android:layout_marginBottom="5dip"
         android:focusableInTouchMode="true"
         android:apiKey="05iMxp8Mh8hqB-MSL7ars5LQU-XqYl_fYwB9FFg"/>
         
@@ -99,7 +106,7 @@ xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
 		android:visibility="gone"/>
 		
 	<Button 
-	  	android:id="@+id/searchButton"
+	  	android:id="@+id/saveButton"
 	  	android:layout_width="fill_parent"
 	  	android:layout_height="70dip"
 	  	android:textSize="16sp"

@@ -10,6 +10,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -18,11 +19,15 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -37,6 +42,8 @@ import com.google.android.maps.OverlayItem;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 import com.markupartist.android.widget.ActionBar.IntentAction;
+import com.taskwhere.android.adapter.TaskListDbAdapter;
+import com.taskwhere.android.model.Task;
 
 /**
  * 
@@ -60,6 +67,9 @@ public class AddTaskActivity extends MapActivity{
 	private final static String SEARCH_REDIRECT = "search_redirect";
 	private final static String SEARCH_ADDRESS = "search_address";
 	
+	private Button saveButton;
+	private EditText taskLoc;
+	private EditText taskText;
 	
 	boolean gpsEnabled;
 	boolean wirelessEnabled;
@@ -84,8 +94,10 @@ public class AddTaskActivity extends MapActivity{
 		final Action infoAction = new IntentAction(this, SearchAddressActivity.createIntent(this), R.drawable.search_magnifier);
         actionBar.addAction(infoAction);
         
-        final Action addAction = new IntentAction(this, createIntent(this), R.drawable.location);
-        actionBar.addAction(addAction);
+        actionBar.addAction(new CheckLocation());
+        
+        taskLoc = (EditText) findViewById(R.id.taskLocEdit);
+        taskText = (EditText) findViewById(R.id.taskDetailEdit);
         
         locMapView = (MapView) findViewById(R.id.locMapView);
 		locMapView.setBuiltInZoomControls(true);
@@ -96,6 +108,35 @@ public class AddTaskActivity extends MapActivity{
 		
 		marker = getResources().getDrawable(R.drawable.marker);
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(),marker.getIntrinsicHeight());
+		
+		Uri data = getIntent().getData();
+		//its a edit request so get intent extras
+		if(data != null){
+			
+			String place = data.toString().trim();
+			place = place.substring(9, place.length());
+			Log.d(TW, "Data come from linkify : " + place);
+			
+			TaskListDbAdapter adapter = new TaskListDbAdapter(getApplicationContext());
+			Cursor editCursor = adapter.getTaskByLocationName(place);
+			startManagingCursor(editCursor);
+			editCursor.moveToFirst();
+			Log.d(TW, "Cursor count : " + editCursor.getCount());
+			
+			if(editCursor.getCount() > 0){
+			
+				Task task = new Task(editCursor.getString(1), editCursor.getString(2),
+						editCursor.getDouble(3), editCursor.getDouble(4), editCursor.getInt(5));
+				
+				taskLoc.setText(task.getTaskLoc());
+				taskText.setText(task.getTaskText());
+				location = new Location(LocationManager.PASSIVE_PROVIDER);
+				location.setLatitude(task.getTaskLat());
+				location.setLongitude(task.getTaskLon());
+				updateWithNewLocation(location, marker);
+			}
+			
+		}
 		
         Bundle extras = getIntent().getExtras();
         
@@ -140,6 +181,24 @@ public class AddTaskActivity extends MapActivity{
     		getCurrentLocation();
         }
         
+        saveButton = (Button) findViewById(R.id.saveButton);
+        saveButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				Task newTask = new Task(taskText.getText().toString(), taskLoc.getText().toString()
+						, location.getLatitude(), location.getLongitude(),23 );
+				TaskListDbAdapter adapter = new TaskListDbAdapter(getApplicationContext());
+				adapter.open();
+				adapter.insertNewTask(newTask);
+				
+				Intent listIntent = new Intent();
+				listIntent.setClass(getApplicationContext(), TaskWhereActivity.class);
+				startActivity(listIntent);
+			}
+		});
+        
 		me=new MyLocationOverlay(this, locMapView);
 		locMapView.getOverlays().add(me);
 	}
@@ -172,7 +231,7 @@ public class AddTaskActivity extends MapActivity{
 		}
 		
 		Timer timerLoc = new Timer();
-		timerLoc.schedule(new LocationTaks(), 10000);
+		timerLoc.schedule(new LocationTaks(), 8000);
 	}
 	
     public static Intent createIntent(Context context) {
@@ -449,5 +508,25 @@ public class AddTaskActivity extends MapActivity{
 			lp.setMargins(x-xDragImageOffset-xDragTouchOffset,y-yDragImageOffset-yDragTouchOffset, 0, 0);
 			dragImage.setLayoutParams(lp);
 		}
+	}
+	
+	/**
+	 * @author burak
+	 * 
+	 * {@link Action} class provide custom
+	 * action on {@link ActionBar}
+	 */
+	private class CheckLocation implements Action {
+
+	    @Override
+	    public int getDrawable() {
+	        return R.drawable.location;
+	    }
+
+	    @Override
+	    public void performAction(View view) {
+	    	showDialog(1);
+	        getCurrentLocation();
+	    }
 	}
 }

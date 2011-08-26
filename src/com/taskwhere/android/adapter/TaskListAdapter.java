@@ -1,9 +1,14 @@
 package com.taskwhere.android.adapter;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.Spannable;
+import android.text.TextPaint;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TextView.BufferType;
 
 import com.taskwhere.android.activity.R;
 import com.taskwhere.android.model.Task;
@@ -44,6 +50,25 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 		public TextView taskLoc;
 	}
 	
+	/**
+	 * 
+	 * @author burak
+	 * class to remove underline text
+	 * from the textview linkify
+	 */
+	private class PlaceSpanNoUnderline extends URLSpan{
+
+		public PlaceSpanNoUnderline(String url) {
+			super(url);
+		}
+		
+		@Override
+		public void updateDrawState(TextPaint ds) {
+			super.updateDrawState(ds);
+			ds.setUnderlineText(false);
+		}
+	}
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
@@ -61,13 +86,20 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 		}else
 			holder = (ViewHolder) v.getTag();
 		
+		
 		//set task resource according to status
 		Task task = taskList.get(position);
 		Log.d(TW, task.toString());
 		holder.taskStatus.setImageResource(task.getStatus() == 0 ?
-				R.drawable.question : R.drawable.tick);		
+							R.drawable.location_icon : R.drawable.checkmark);		
 		holder.taskText.setText(task.getTaskText());
-		holder.taskLoc.setText(task.getTaskLoc());
+		
+		//make location looks linkfied so that user can edit
+		holder.taskLoc.setText("@" + task.getTaskLoc(),BufferType.SPANNABLE);
+		holder.taskLoc.setLinkTextColor(R.color.grey_start);
+		Pattern placeMatcher = Pattern.compile("\\B@[^:\\s]+");
+		String placeViewURL = "place://";
+		Linkify.addLinks(holder.taskLoc, placeMatcher, placeViewURL);
 		
 		return v;
 	}
