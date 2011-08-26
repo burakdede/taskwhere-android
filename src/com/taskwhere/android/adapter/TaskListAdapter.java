@@ -37,7 +37,7 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 	private LayoutInflater inflater;
 	
 	public TaskListAdapter(Activity context, ArrayList<Task> objects) {
-		super(context, R.layout.task_item, objects);
+		super(context, R.layout.tasklist_item, objects);
 		this.context = context;
 		this.taskList = objects;
 		this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -56,7 +56,7 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 	 * class to remove underline text
 	 * from the textview linkify
 	 */
-	private class PlaceSpanNoUnderline extends URLSpan{
+/*	private class PlaceSpanNoUnderline extends URLSpan{
 
 		public PlaceSpanNoUnderline(String url) {
 			super(url);
@@ -67,7 +67,7 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 			super.updateDrawState(ds);
 			ds.setUnderlineText(false);
 		}
-	}
+	}*/
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -78,7 +78,7 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 		if(v == null){
 			holder = new ViewHolder();
 			inflater = context.getLayoutInflater();
-			v = inflater.inflate(R.layout.task_item,null);
+			v = inflater.inflate(R.layout.tasklist_item,null);
 			holder.taskStatus = (ImageView) v.findViewById(R.id.taskStatus);
 			holder.taskText = (TextView) v.findViewById(R.id.taskText);
 			holder.taskLoc = (TextView) v.findViewById(R.id.taskLoc);
@@ -86,20 +86,13 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 		}else
 			holder = (ViewHolder) v.getTag();
 		
-		
 		//set task resource according to status
 		Task task = taskList.get(position);
 		Log.d(TW, task.toString());
 		holder.taskStatus.setImageResource(task.getStatus() == 0 ?
-							R.drawable.location_icon : R.drawable.checkmark);		
+							R.drawable.location_icon : R.drawable.ic_accept);		
 		holder.taskText.setText(task.getTaskText());
-		
-		//make location looks linkfied so that user can edit
 		holder.taskLoc.setText("@" + task.getTaskLoc(),BufferType.SPANNABLE);
-//		holder.taskLoc.setLinkTextColor(R.color.grey_start);
-//		Pattern placeMatcher = Pattern.compile("\\B@[^:\\s]+");
-//		String placeViewURL = "place://";
-//		Linkify.addLinks(holder.taskLoc, placeMatcher, placeViewURL);
 		
 		return v;
 	}

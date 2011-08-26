@@ -1,5 +1,7 @@
 package com.taskwhere.android.model;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author burak
@@ -7,7 +9,7 @@ package com.taskwhere.android.model;
  * 
  * Simple {@link Task} model object
  */
-public class Task {
+public class Task implements Serializable{
 
 	private String taskText;
 	

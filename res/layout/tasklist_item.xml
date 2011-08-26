@@ -40,7 +40,6 @@
       	android:scrollHorizontally="false"
       	android:layout_toRightOf="@id/taskStatus"
       	android:layout_below="@id/taskText"
-      	android:textSize="13dip"
-      	android:textColor="#ffffffff"/>
+      	style="@style/TaskLocViewStyle"/>
 		
 </RelativeLayout>

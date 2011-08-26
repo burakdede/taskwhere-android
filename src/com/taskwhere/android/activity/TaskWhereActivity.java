@@ -9,12 +9,9 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
-import android.webkit.WebChromeClient.CustomViewCallback;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -42,8 +39,8 @@ public class TaskWhereActivity extends Activity {
 	private static ActionBar actionBar;
 	private TaskListDbAdapter dbAdapter;
 	private Cursor taskCursor;
-	private Button testButton;
 	private int mSelectedRow = 0;
+	private final static String EDIT_TASK = "com.taskwhere.android.Task";
 	
 	/**
 	 * setup actionbar pattern using {@link ActionBar}
@@ -55,61 +52,72 @@ public class TaskWhereActivity extends Activity {
     	requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         
-        
         taskList = new ArrayList<Task>();
         openDatabaseAccess();
         taskCursor = dbAdapter.getAllTasks();
         
         if(taskCursor.getCount() == 0){
-        	getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.empty);
-        	setContentView(R.layout.empty);
+        	getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.tasklist_empty);
+        	setContentView(R.layout.tasklist_empty);
+        	
         }else{
+        	
         	getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.main);
         	setContentView(R.layout.main);
+        	
         	showSavedProfiles();
-            taskListView = (ListView) findViewById(R.id.taskList);
+            taskListView = (ListView) findViewById(R.id.taskListView);
             taskListView.setAdapter(new TaskListAdapter(this, taskList));
             
-            //Add action item
         	ActionItem addAction = new ActionItem();
-		
-			addAction.setTitle("Add");
+			addAction.setTitle("Edit");
 			addAction.setIcon(getResources().getDrawable(R.drawable.ic_add));
 	
-			//Accept action item
 			ActionItem accAction = new ActionItem();
-			
-			accAction.setTitle("Accept");
+			accAction.setTitle("Mark As Done");
 			accAction.setIcon(getResources().getDrawable(R.drawable.ic_accept));
 			
-			//Upload action item
 			ActionItem upAction = new ActionItem();
-			
 			upAction.setTitle("Upload");
 			upAction.setIcon(getResources().getDrawable(R.drawable.ic_up));
 			
 			final QuickAction mQuickAction 	= new QuickAction(this);
-			
 			mQuickAction.addActionItem(addAction);
 			mQuickAction.addActionItem(accAction);
 			mQuickAction.addActionItem(upAction);
 
 			
-			//setup the action item click listener
+			/*
+			 * click listener for quick action
+			 * widget
+			 */
 			mQuickAction.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {			
 				@Override
 				public void onItemClick(int pos) {
 					
-					if (pos == 0) { //Add item selected
-						Toast.makeText(TaskWhereActivity.this, "Add item selected on row " + mSelectedRow, Toast.LENGTH_SHORT).show();
-					} else if (pos == 1) { //Accept item selected
+					Intent callIntent;
+					Task selectedTask = taskList.get(pos);
+					
+					if (pos == 0) {//edit item 
+						
+						callIntent = new Intent();
+						callIntent.setClass(getApplicationContext(), AddTaskActivity.class);
+						callIntent.putExtra(EDIT_TASK, selectedTask);
+						startActivity(callIntent);
+						//Toast.makeText(AddTaskActivity.this, "Add item selected on row " + mSelectedRow, Toast.LENGTH_SHORT).show();
+					} else if (pos == 1) {
+
 						Toast.makeText(TaskWhereActivity.this, "Accept item selected on row " + mSelectedRow, Toast.LENGTH_SHORT).show();
-					} else if (pos == 2) { //Upload item selected
+					} else if (pos == 2) {
 						Toast.makeText(TaskWhereActivity.this, "Upload items selected on row " + mSelectedRow, Toast.LENGTH_SHORT).show();
 					}	
 				}
 			});
 
+			/*
+			 * send clicked list item info to quick action
+			 * widget
+			 */
 			taskListView.setOnItemClickListener(new OnItemClickListener() {
 
 				@Override
@@ -129,8 +137,6 @@ public class TaskWhereActivity extends Activity {
         actionBar.addAction(infoAction);
         final Action addAction = new IntentAction(this, AddTaskActivity.createIntent(this), R.drawable.add_item);
         actionBar.addAction(addAction);
-        
-        
     }
     
     /**

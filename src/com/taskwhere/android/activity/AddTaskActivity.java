@@ -10,7 +10,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -19,7 +18,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -66,6 +64,7 @@ public class AddTaskActivity extends MapActivity{
 	private ProgressDialog loadingDialog;
 	private final static String SEARCH_REDIRECT = "search_redirect";
 	private final static String SEARCH_ADDRESS = "search_address";
+	private final static String EDIT_TASK = "com.taskwhere.android.Task";
 	
 	private Button saveButton;
 	private EditText taskLoc;
@@ -86,7 +85,7 @@ public class AddTaskActivity extends MapActivity{
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.addtask);
+		setContentView(R.layout.add_task);
 
 		ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
 		actionBar.setHomeAction(new IntentAction(this, TaskWhereActivity.createIntent(this),R.drawable.home));
@@ -117,9 +116,10 @@ public class AddTaskActivity extends MapActivity{
 	    * find location of the given address 
 	    * update map accordingly
 	    */
-	    if(extras != null && extras.getBoolean(SEARCH_REDIRECT)){
+		
+	    if(extras != null){
 	        	
-	    	if(extras.getString(SEARCH_ADDRESS) != null){
+	    	if(extras.getBoolean(SEARCH_REDIRECT) && extras.getString(SEARCH_ADDRESS) != null){
 	        		
 	    		Log.d(TW, "Redirected from search activity just animate to point");
 	            String address = extras.getString(SEARCH_ADDRESS);
@@ -143,10 +143,22 @@ public class AddTaskActivity extends MapActivity{
 	    		} catch (IOException e) {
 	    			e.printStackTrace();
 	    		}
-	            	
-	        }else{
-	        	Log.d(TW, "No address provided by user");
-	        }
+	    	}
+	    	
+	    	if(extras.getSerializable(EDIT_TASK) != null){
+	        	Log.d(TW, "There is edit object with intent");
+	        	Task editTask = (Task) extras.getSerializable(EDIT_TASK);
+	        	Log.d(TW, editTask.toString());
+	        	
+	        	taskLoc.setText(editTask.getTaskLoc());
+	        	taskText.setText(editTask.getTaskText());
+	        	location = new Location(LocationManager.PASSIVE_PROVIDER);
+				location.setLatitude(editTask.getTaskLat());
+				location.setLongitude(editTask.getTaskLon());
+				updateWithNewLocation(location, marker);
+				locMapView.requestFocus();
+	    	}
+	    	
 	    }else{
 	        	
 	       	showDialog(1);
