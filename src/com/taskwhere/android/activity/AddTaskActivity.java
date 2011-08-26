@@ -118,9 +118,11 @@ public class AddTaskActivity extends MapActivity{
 			Log.d(TW, "Data come from linkify : " + place);
 			
 			TaskListDbAdapter adapter = new TaskListDbAdapter(getApplicationContext());
+			adapter.open();
 			Cursor editCursor = adapter.getTaskByLocationName(place);
 			startManagingCursor(editCursor);
 			editCursor.moveToFirst();
+			
 			Log.d(TW, "Cursor count : " + editCursor.getCount());
 			
 			if(editCursor.getCount() > 0){
@@ -136,69 +138,70 @@ public class AddTaskActivity extends MapActivity{
 				updateWithNewLocation(location, marker);
 			}
 			
+		}else{
+			
+			Bundle extras = getIntent().getExtras();
+	        
+	        /*
+	         * redirect from search address activity
+	         * find location of the given address 
+	         * update map accordingly
+	         */
+	        if(extras != null && extras.getBoolean(SEARCH_REDIRECT)){
+	        	
+	        	if(extras.getString(SEARCH_ADDRESS) != null){
+	        		
+	        		Log.d(TW, "Redirected from search activity just animate to point");
+	            	String address = extras.getString(SEARCH_ADDRESS);
+	            	Log.d(TW, "Search address : " + address);
+	        		
+	            	Geocoder gc = new Geocoder(getApplicationContext());
+	            	try {
+	    				List<Address> results = gc.getFromLocationName(address, 1);
+	    				
+	    				if(results != null){
+	    					if(results.size() >0){
+	    						showDialog(1);
+	    						Address x = results.get(0);
+	    						location = new Location(LocationManager.PASSIVE_PROVIDER);
+	    						location.setLatitude(x.getLatitude());
+	    						location.setLongitude(x.getLongitude());
+	    						updateWithNewLocation(location, marker);
+	    						locMapView.requestFocus();
+	    					}
+	    				}
+	    			} catch (IOException e) {
+	    				e.printStackTrace();
+	    			}
+	            	
+	        	}else{
+	        		Log.d(TW, "No address provided by user");
+	        	}
+	        }else{
+	        	
+	        	showDialog(1);
+	    		getCurrentLocation();
+	        }
+	        
+	        saveButton = (Button) findViewById(R.id.saveButton);
+	        saveButton.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					
+					Task newTask = new Task(taskText.getText().toString(), taskLoc.getText().toString()
+							, location.getLatitude(), location.getLongitude(),23 );
+					TaskListDbAdapter adapter = new TaskListDbAdapter(getApplicationContext());
+					adapter.open();
+					adapter.insertNewTask(newTask);
+					
+					Intent listIntent = new Intent();
+					listIntent.setClass(getApplicationContext(), TaskWhereActivity.class);
+					startActivity(listIntent);
+				}
+			});
 		}
 		
-        Bundle extras = getIntent().getExtras();
-        
-        /*
-         * redirect from search address activity
-         * find location of the given address 
-         * update map accordingly
-         */
-        if(extras != null && extras.getBoolean(SEARCH_REDIRECT)){
-        	
-        	if(extras.getString(SEARCH_ADDRESS) != null){
-        		
-        		Log.d(TW, "Redirected from search activity just animate to point");
-            	String address = extras.getString(SEARCH_ADDRESS);
-            	Log.d(TW, "Search address : " + address);
-        		
-            	Geocoder gc = new Geocoder(getApplicationContext());
-            	try {
-    				List<Address> results = gc.getFromLocationName(address, 1);
-    				
-    				if(results != null){
-    					if(results.size() >0){
-    						showDialog(1);
-    						Address x = results.get(0);
-    						location = new Location(LocationManager.PASSIVE_PROVIDER);
-    						location.setLatitude(x.getLatitude());
-    						location.setLongitude(x.getLongitude());
-    						updateWithNewLocation(location, marker);
-    						locMapView.requestFocus();
-    					}
-    				}
-    			} catch (IOException e) {
-    				e.printStackTrace();
-    			}
-            	
-        	}else{
-        		Log.d(TW, "No address provided by user");
-        	}
-        }else{
-        	
-        	showDialog(1);
-    		getCurrentLocation();
-        }
-        
-        saveButton = (Button) findViewById(R.id.saveButton);
-        saveButton.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				
-				Task newTask = new Task(taskText.getText().toString(), taskLoc.getText().toString()
-						, location.getLatitude(), location.getLongitude(),23 );
-				TaskListDbAdapter adapter = new TaskListDbAdapter(getApplicationContext());
-				adapter.open();
-				adapter.insertNewTask(newTask);
-				
-				Intent listIntent = new Intent();
-				listIntent.setClass(getApplicationContext(), TaskWhereActivity.class);
-				startActivity(listIntent);
-			}
-		});
-        
 		me=new MyLocationOverlay(this, locMapView);
 		locMapView.getOverlays().add(me);
 	}
