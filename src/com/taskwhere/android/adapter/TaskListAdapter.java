@@ -15,6 +15,14 @@ import android.widget.TextView;
 import com.taskwhere.android.activity.R;
 import com.taskwhere.android.model.Task;
 
+/**
+ * 
+ * @author burak
+ * @date 26 Aug 2011
+ * 
+ * {@link ArrayAdapter} implementation for 
+ * TaskWhereActivity activity 
+ */
 public class TaskListAdapter extends ArrayAdapter<Task>{
 
 	private final static String TW = "TaskWhere";
@@ -29,6 +37,7 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 		this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 	
+	//simple Holder pattern for different objects on row
 	static class ViewHolder {
 		public ImageView taskStatus;
 		public TextView taskText;
@@ -52,12 +61,14 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 		}else
 			holder = (ViewHolder) v.getTag();
 		
+		//set task resource according to status
 		Task task = taskList.get(position);
 		Log.d(TW, task.toString());
 		holder.taskStatus.setImageResource(task.getStatus() == 0 ?
 				R.drawable.question : R.drawable.tick);		
 		holder.taskText.setText(task.getTaskText());
 		holder.taskLoc.setText(task.getTaskLoc());
+		
 		return v;
 	}
 }

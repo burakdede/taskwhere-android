@@ -4,7 +4,7 @@ xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ebebeb">
+    android:background="@drawable/listview_item_manual">
     
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
@@ -101,7 +101,7 @@ xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
 	<Button 
 	  	android:id="@+id/searchButton"
 	  	android:layout_width="fill_parent"
-	  	android:layout_height="wrap_content"
+	  	android:layout_height="70dip"
 	  	android:textSize="16sp"
 	  	android:textColor="#ffffff"
 	  	android:background="@drawable/custom_button_green"

@@ -28,7 +28,8 @@
 	<Button 
 	  	android:id="@+id/searchButton"
 	  	android:layout_width="fill_parent"
-	  	android:layout_height="wrap_content"
+	  	android:layout_height="70dip"
+	  	android:textSize="16sp"
 	  	android:textColor="#ffffff"
 	  	android:background="@drawable/custom_button_green"
 	  	android:text="Show on Map"/>

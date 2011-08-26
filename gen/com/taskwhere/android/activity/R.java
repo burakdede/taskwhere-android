@@ -25,6 +25,31 @@ containing a value of this type.
         public static final int actionbar_background_start=0x7f040002;
         public static final int actionbar_separator=0x7f040000;
         public static final int actionbar_title=0x7f040001;
+        public static final int black_end=0x7f040012;
+        public static final int black_start=0x7f040011;
+        public static final int blue_badges_mayor=0x7f040015;
+        public static final int blue_end=0x7f04000a;
+        /**  427BBA, 0f93b8 
+         */
+        public static final int blue_start=0x7f040009;
+        public static final int color_bright_green=0x7f040019;
+        public static final int color_score_list_adapter_highlight=0x7f040017;
+        public static final int color_score_mayor_section_background=0x7f040018;
+        public static final int dgrey_end=0x7f04000e;
+        public static final int dgrey_start=0x7f04000d;
+        public static final int grey_end=0x7f040014;
+        public static final int grey_start=0x7f040013;
+        public static final int item_grey_end=0x7f040010;
+        public static final int item_grey_start=0x7f04000f;
+        public static final int lgrey_end=0x7f04000c;
+        public static final int lgrey_start=0x7f04000b;
+        public static final int purple_end=0x7f040008;
+        public static final int purple_start=0x7f040007;
+        public static final int tip_detail_actions_background=0x7f04001a;
+        public static final int transparent=0x7f04001c;
+        public static final int user_details_activity_general=0x7f04001b;
+        public static final int vlgrey=0x7f040016;
+        public static final int white=0x7f040006;
     }
     public static final class dimen {
         public static final int actionbar_height=0x7f050000;
@@ -52,13 +77,13 @@ containing a value of this type.
         public static final int home=0x7f020011;
         public static final int icon=0x7f020012;
         public static final int info=0x7f020013;
-        public static final int list_item=0x7f020014;
-        public static final int list_item_old=0x7f020015;
-        public static final int location=0x7f020016;
-        public static final int marker=0x7f020017;
-        public static final int note=0x7f020018;
-        public static final int note_accept=0x7f020019;
-        public static final int note_delete=0x7f02001a;
+        public static final int listview_background=0x7f020014;
+        public static final int listview_background_flat=0x7f020015;
+        public static final int listview_header_background=0x7f020016;
+        public static final int listview_item=0x7f020017;
+        public static final int listview_item_manual=0x7f020018;
+        public static final int location=0x7f020019;
+        public static final int marker=0x7f02001a;
         public static final int question=0x7f02001b;
         public static final int search_magnifier=0x7f02001c;
         public static final int tick=0x7f02001d;
@@ -78,6 +103,7 @@ containing a value of this type.
         public static final int header1=0x7f080014;
         public static final int header2=0x7f080015;
         public static final int header3=0x7f080016;
+        public static final int listview_item=0x7f08001b;
         public static final int locMapView=0x7f080012;
         public static final int screen=0x7f080000;
         public static final int searchBar=0x7f08000b;
@@ -112,6 +138,8 @@ containing a value of this type.
         public static final int ActionBarHomeLogo=0x7f070003;
         public static final int ActionBarItem=0x7f070001;
         public static final int ActionBarProgressBar=0x7f070004;
+        public static final int TaskTextViewStyle=0x7f070006;
+        public static final int listItemStyle=0x7f070005;
     }
     public static final class styleable {
         /** Attributes that can be used with a ActionBar.

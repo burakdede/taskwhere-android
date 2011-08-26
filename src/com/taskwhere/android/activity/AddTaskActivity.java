@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -24,7 +23,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -40,6 +38,14 @@ import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 import com.markupartist.android.widget.ActionBar.IntentAction;
 
+/**
+ * 
+ * @author burak
+ * @date 26 Aug 2011
+ * 
+ * activity allows user the compose new task
+ * with task location, task text and coordinates on map
+ */
 public class AddTaskActivity extends MapActivity{
 
 	
@@ -59,6 +65,12 @@ public class AddTaskActivity extends MapActivity{
 	boolean wirelessEnabled;
 	Location location;
 	
+	/**
+	 * setup actionbar pattern using {@link ActionBar}
+	 * class and set {@link IntentAction} accordingly
+	 * 
+	 * try to detect current location of user on start
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -87,7 +99,11 @@ public class AddTaskActivity extends MapActivity{
 		
         Bundle extras = getIntent().getExtras();
         
-        
+        /*
+         * redirect from search address activity
+         * find location of the given address 
+         * update map accordingly
+         */
         if(extras != null && extras.getBoolean(SEARCH_REDIRECT)){
         	
         	if(extras.getString(SEARCH_ADDRESS) != null){
@@ -128,6 +144,11 @@ public class AddTaskActivity extends MapActivity{
 		locMapView.getOverlays().add(me);
 	}
 
+	/**
+	 * check providers enabled or not
+	 * if enabled both get location listeners from both
+	 * after 10 second with no update check lastknownlocations
+	 */
 	public void getCurrentLocation(){
 		
 		String contenxt = Context.LOCATION_SERVICE;
@@ -138,7 +159,7 @@ public class AddTaskActivity extends MapActivity{
 		
 		if(!gpsEnabled && !wirelessEnabled){
 			
-			Toast disableToast = Toast.makeText(getApplicationContext(), "Its seems both your GPS and WIFI is disabled", Toast.LENGTH_LONG);
+			Toast disableToast = Toast.makeText(getApplicationContext(), "It seems both your GPS and WIFI are disabled", Toast.LENGTH_LONG);
 			disableToast.show();
 		}
 		
@@ -161,6 +182,10 @@ public class AddTaskActivity extends MapActivity{
         return i;
 	}
     
+    /**
+     * dialog shows up while trying to get
+     * current known location
+     */
     @Override
     protected Dialog onCreateDialog(int id) {
     	
@@ -170,6 +195,16 @@ public class AddTaskActivity extends MapActivity{
 		return loadingDialog;
     }
     
+    /**
+     * 
+     * @author burak
+     * Simple {@link TimerTask} class
+     * just getLastKnownLocations and return the most
+     * up to date one
+     * 
+     * also clean former location listeners to not drain
+     * battery of device
+     */
     class LocationTaks extends TimerTask{
 		
 		@Override
@@ -191,25 +226,30 @@ public class AddTaskActivity extends MapActivity{
 			
 			if(gpsLoc != null && networkLoc != null){
 				
-				if(gpsLoc.getTime() > networkLoc.getTime()){
+				if(gpsLoc.getTime() > networkLoc.getTime())
 					location = gpsLoc;
-				}else{
+				else
 					location = networkLoc;
-				}
 			}
 			
-			if(gpsLoc != null){
+			if(gpsLoc != null)
 				location = gpsLoc;
-			}
 			
-			if(networkLoc != null){
+			if(networkLoc != null)
 				location = networkLoc;
-			}
 			
 			updateWithNewLocation(location,marker);
 		}
 	}
     
+    /**
+     * 
+     * @param location
+     * @param marker
+     * 
+     * Update on map with given location object
+     * and marker
+     */
     private void updateWithNewLocation(Location location,Drawable marker){
 		
 		if(location != null){
@@ -229,73 +269,66 @@ public class AddTaskActivity extends MapActivity{
 		}
 	}
 
+    /**
+     * {@link LocationListener} for GPS provider
+     * to listen updates
+     */
 	private final LocationListener gpsLocationListener = new LocationListener() {
 		
 		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void onStatusChanged(String provider, int status, Bundle extras) {}
 		
 		@Override
-		public void onProviderEnabled(String provider) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void onProviderEnabled(String provider) {}
 		
 		@Override
-		public void onProviderDisabled(String provider) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void onProviderDisabled(String provider) {}
 		
 		@Override
 		public void onLocationChanged(Location location) {
-			// TODO Auto-generated method stub
 			Log.d(TW, "There are some updates from GSP listener");
 			updateWithNewLocation(location,marker);
 		}
 	};
 
+	/**
+     * {@link LocationListener} for NETWORK provider
+     * to listen updates
+     */
 	private final LocationListener networklocationListener = new LocationListener() {
 		
 		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void onStatusChanged(String provider, int status, Bundle extras) {}
 		
 		@Override
-		public void onProviderEnabled(String provider) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void onProviderEnabled(String provider) {}
 		
 		@Override
-		public void onProviderDisabled(String provider) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void onProviderDisabled(String provider) {}
 		
 		@Override
 		public void onLocationChanged(Location location) {
-			// TODO Auto-generated method stub
 			Log.d(TW, "There are some updates from Network listener");
 			updateWithNewLocation(location,marker);
 		}
 	};
     
 	private GeoPoint getPoint(double lat, double lon) {
-    
 		return(new GeoPoint((int)(lat*1000000.0),(int)(lon*1000000.0)));
 	}
 
 	@Override
 	protected boolean isRouteDisplayed() {
-
 		return false;
 	}
 	
+	/**
+	 * 
+	 * @author burak
+	 * 
+	 * Overlay class to show marker overlay and implement
+	 * actions like drag & drop, get marker dropped location etc.
+	 */
 	private class SitesOverlay extends ItemizedOverlay<OverlayItem> {
 		
 		public List<OverlayItem> items=new ArrayList<OverlayItem>();
@@ -307,6 +340,14 @@ public class AddTaskActivity extends MapActivity{
 		private int xDragTouchOffset=0;
 		private int yDragTouchOffset=0;
 
+		/**
+		 * 
+		 * @param marker
+		 * @param location
+		 * 
+		 * Add marker to the center of the map 
+		 * with getInstricWidth/Height and populate
+		 */
 		public SitesOverlay(Drawable marker,Location location) {
 			
 			super(marker);
@@ -324,11 +365,8 @@ public class AddTaskActivity extends MapActivity{
 		}
 
 		@Override
-		public void draw(Canvas canvas, MapView mapView,
-											boolean shadow) {
-			
+		public void draw(Canvas canvas, MapView mapView,boolean shadow) {
 			if(!shadow){
-				
 				super.draw(canvas, mapView, shadow);
 			}
 			boundCenterBottom(marker);
@@ -339,6 +377,10 @@ public class AddTaskActivity extends MapActivity{
 			return(items.size());
 		}
 
+		/**
+		 * implementation of the some {@link MotionEvent}
+		 * like ACTION_DOWN, ACTION_UP, ACTION_MOVE
+		 */
 		@Override
 		public boolean onTouchEvent(MotionEvent event, MapView mapView) {
 			
@@ -382,25 +424,21 @@ public class AddTaskActivity extends MapActivity{
 			else if (action==MotionEvent.ACTION_UP && inDrag!=null) {
 				
 				mapView.getParent().requestDisallowInterceptTouchEvent(true);
-				Log.d(TW, "Dragging pin setting visibility gone");
 				dragImage.setVisibility(View.GONE);
 
-				Log.d(TW, "Getting new projection geopoint from map");
 				GeoPoint pt=locMapView.getProjection().fromPixels(x-xDragTouchOffset,y-yDragTouchOffset);
 				Log.d(TW, "Dragged Location is : " +" Lattitude => "+ pt.getLatitudeE6() +" | Longitude =>" + pt.getLongitudeE6());
+				
 				OverlayItem toDrop=new OverlayItem(pt, inDrag.getTitle(),inDrag.getSnippet());
-				Log.d(TW, "Adding new point to items and animate to that location");
 				point = pt;
 				mapController.animateTo(pt);
 				items.clear();
 				items.add(toDrop);
 				populate();
-				Log.d(TW, "Populating map again...");
 
 				inDrag=null;
 				result=true;
 			}
-
 			return(result || super.onTouchEvent(event, mapView));
 		}
 

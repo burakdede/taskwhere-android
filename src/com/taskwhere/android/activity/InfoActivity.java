@@ -9,6 +9,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 
+/**
+ * 
+ * @author burak
+ * @date 26 Aug 2011
+ * 
+ * activity that gives information about
+ * how to use application and send feedback
+ */
 public class InfoActivity extends Activity {
 
 	@Override
@@ -28,6 +36,4 @@ public class InfoActivity extends Activity {
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         return i;
 	}
-	
-	
 }

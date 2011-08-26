@@ -1,16 +1,24 @@
 package com.taskwhere.android.adapter;
 
-import com.taskwhere.android.model.Task;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.util.Log;
 
+import com.taskwhere.android.model.Task;
+
+/**
+ * 
+ * @author burak
+ * @date 26 Aug 2011
+ * 
+ * Database adapter for some generic
+ * database operations like CREATE,UPDATE,SELECT
+ */
 public class TaskListDbAdapter {
 
 	private final static String TW = "TaskWhere";
@@ -31,7 +39,6 @@ public class TaskListDbAdapter {
 	public static final String STATUS = "status";
 	
 	public TaskListDbAdapter(Context context) {
-
 		this.context = context;
 		dbHelper = new TaskListDbOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -40,14 +47,23 @@ public class TaskListDbAdapter {
 		db.close();
 	}
 	
-	public void open(){
-		try{
-			db = dbHelper.getWritableDatabase();
-		}catch (SQLiteException e) {
-			db = dbHelper.getReadableDatabase();
-		}
+	/**
+	 * @throws SQLiteException
+	 * 
+	 * Create/Open database for
+	 * reading/writing
+	 */
+	public void open() throws SQLiteException{
+		
+		db = dbHelper.getWritableDatabase();
+		db = dbHelper.getReadableDatabase();
 	}
 	
+	/**
+	 * 
+	 * @param task
+	 * @return KEY_ID
+	 */
 	public long insertNewTask(Task task){
 		
 		ContentValues taskValues = new ContentValues();
@@ -62,7 +78,22 @@ public class TaskListDbAdapter {
 		return db.insert(DATABASE_TABLE, null, taskValues);
 	}
 	
+	/**
+	 * Get all task items from table
+	 * @return {@link Cursor}
+	 */
+	public Cursor getAllTasks() {
+		return db.query(DATABASE_TABLE, new String [] { KEY_ID, TASK_TEXT , TASK_LOC,
+				TASK_LAT, TASK_LON, UNIQUEID, STATUS }, null, null, null, null, null, null);
+	}
 	
+	/**
+	 * 
+	 * @author burak
+	 * @date 26 Aug 2011
+	 * 
+	 * Databaes create and upgrade operations
+	 */
 	private static class TaskListDbOpenHelper extends SQLiteOpenHelper{
 
 		public TaskListDbOpenHelper(Context context, String name,
@@ -80,17 +111,10 @@ public class TaskListDbAdapter {
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
 			Log.d(TW, "Upgrading from version "+ oldVersion + " to "+ newVersion + " ,which will destroy all data");
 			db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE);
 			onCreate(db);
 		}
 	}
 
-
-	public Cursor getAllTasks() {
-
-		return db.query(DATABASE_TABLE, new String [] { KEY_ID, TASK_TEXT , TASK_LOC,
-				TASK_LAT, TASK_LON, UNIQUEID, STATUS }, null, null, null, null, null, null);
-	}
 }

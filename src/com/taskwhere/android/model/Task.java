@@ -1,5 +1,12 @@
 package com.taskwhere.android.model;
 
+/**
+ * 
+ * @author burak
+ * @date 26 Aug 2011
+ * 
+ * Simple {@link Task} model object
+ */
 public class Task {
 
 	private String taskText;
@@ -79,6 +86,7 @@ public class Task {
 		this.status = status;
 	}
 	
+	//for debugging
 	@Override
 	public String toString() {
 
