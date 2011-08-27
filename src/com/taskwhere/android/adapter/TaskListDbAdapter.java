@@ -87,6 +87,12 @@ public class TaskListDbAdapter {
 				TASK_LAT, TASK_LON, UNIQUEID, STATUS }, null, null, null, null, null, null);
 	}
 	
+	
+	public boolean deleteTaskByUniqueId(int uniqueid){
+		
+		return db.delete(DATABASE_TABLE, UNIQUEID + "=" + uniqueid, null) > 0;
+	}
+	
 	/**
 	 * 
 	 * @param locationName

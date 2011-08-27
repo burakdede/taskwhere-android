@@ -80,7 +80,7 @@ public class TaskWhereActivity extends Activity {
 			accAction.setIcon(getResources().getDrawable(R.drawable.ic_accept));
 			
 			ActionItem upAction = new ActionItem();
-			upAction.setTitle("Upload");
+			upAction.setTitle("Delete");
 			upAction.setIcon(getResources().getDrawable(R.drawable.ic_up));
 			
 			final QuickAction mQuickAction 	= new QuickAction(this);
@@ -98,7 +98,8 @@ public class TaskWhereActivity extends Activity {
 				public void onItemClick(int pos) {
 					
 					Intent callIntent;
-					Task selectedTask = taskList.get(pos);
+					Log.d(TW, "Selected position : " + mSelectedRow);
+					Task selectedTask = taskList.get(mSelectedRow);
 					
 					if (pos == 0) {//edit item 
 						
@@ -106,19 +107,22 @@ public class TaskWhereActivity extends Activity {
 						callIntent.setClass(getApplicationContext(), AddTaskActivity.class);
 						callIntent.putExtra(EDIT_TASK, selectedTask);
 						startActivity(callIntent);
-						//Toast.makeText(AddTaskActivity.this, "Add item selected on row " + mSelectedRow, Toast.LENGTH_SHORT).show();
 					} else if (pos == 1) {
 						
-						Log.d(TW, taskList.get(pos).toString());
 						selectedTask.setStatus(1);
 						if(dbAdapter.updateTaskByUniqueId(selectedTask, selectedTask.getUnique_taskid()))
 							Log.d(TW, "Updated item succesfully");
-						taskListView.invalidate();
+						taskList.get(mSelectedRow).setStatus(1);
 						taskListAdapter.notifyDataSetChanged();
-						
-						//Toast.makeText(TaskWhereActivity.this, "Accept item selected on row " + mSelectedRow, Toast.LENGTH_SHORT).show();
+						taskListView.invalidate();
 					} else if (pos == 2) {
-						Toast.makeText(TaskWhereActivity.this, "Upload items selected on row " + mSelectedRow, Toast.LENGTH_SHORT).show();
+						
+						if(dbAdapter.deleteTaskByUniqueId(selectedTask.getUnique_taskid())){
+							Log.d(TW, "Deleted succesfully");	
+						}
+						taskList.remove(mSelectedRow);
+						taskListAdapter.notifyDataSetChanged();
+						taskListView.invalidate();
 					}	
 				}
 			});
@@ -164,7 +168,6 @@ public class TaskWhereActivity extends Activity {
         				taskCursor.getDouble(3), taskCursor.getDouble(4), taskCursor.getInt(5),taskCursor.getInt(6)));
     		}while(taskCursor.moveToNext());
     	}
-    	
     	if(taskCursor != null)
     		taskCursor.close();
     }

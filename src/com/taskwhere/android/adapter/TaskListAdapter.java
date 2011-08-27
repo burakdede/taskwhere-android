@@ -84,13 +84,15 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 		}else
 			holder = (ViewHolder) v.getTag();
 		
-		//set task resource according to status
 		Task task = taskList.get(position);
 		holder.taskStatus.setImageResource(R.drawable.location_icon);		
 		holder.taskText.setText(task.getTaskText());
-		//set paint strike if task is already done
-		if(task.getStatus() == 1)
+
+		if(task.getStatus() == 1){
+			Log.d(TW, task.toString());
 			holder.taskText.setPaintFlags(holder.taskText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+		}
+			
 		holder.taskLoc.setText("@ " + task.getTaskLoc(),BufferType.SPANNABLE);
 		holder.taskStatusImage.setImageResource(task.getStatus() == 0 ? R.drawable.taskwait : R.drawable.taskdone);
 		
