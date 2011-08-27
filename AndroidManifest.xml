@@ -15,21 +15,18 @@
             </intent-filter>
         </activity>
 
-		<activity android:name=".AddTaskActivity" android:windowSoftInputMode="stateHidden">
-			<intent-filter>
-	            <category android:name="android.intent.category.DEFAULT"/> 
-	            <action android:name="android.intent.action.VIEW" /> 
-	            <data android:scheme="place" /> 
-            </intent-filter>
-		</activity>
-		
+		<activity android:name=".AddTaskActivity" android:windowSoftInputMode="stateHidden"/>
 		<activity android:name=".InfoActivity"/>
 		<activity android:name=".SearchAddressActivity"/>
+		
+		<receiver android:name=".reciever.ProximityAlertReciver"/>
+		<service android:enabled="true" android:name=".LocationProxyService" />
 		
     </application>
     
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-   	<uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
-    <uses-permission android:name="com.google.android.maps"/>
+   	<uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" /> 
+   	<uses-permission android:name="android.permission.VIBRATE"/>
+   	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 </manifest>

@@ -70,6 +70,7 @@ public class AddTaskActivity extends MapActivity{
 	private final static String EDIT_TASK = "com.taskwhere.android.Task";
 	private static final String ARRIVED_ACTION = "com.taskwhere.android.activity.ARRIVED_ACTION";
 	private SharedPreferences preferences;
+	private TaskListDbAdapter adapter;
 	
 	private static int unique_id;
 	private Button saveButton;
@@ -201,9 +202,10 @@ public class AddTaskActivity extends MapActivity{
 				newTask.setUnique_taskid(unique_id);
 				/*======================== END OF REGISTRATION ========================*/
 				
-				TaskListDbAdapter adapter = new TaskListDbAdapter(getApplicationContext());
+				adapter = new TaskListDbAdapter(getApplicationContext());
 				adapter.open();
 				adapter.insertNewTask(newTask);
+				
 				
 				Intent listIntent = new Intent();
 				listIntent.setClass(getApplicationContext(), TaskWhereActivity.class);
@@ -213,6 +215,14 @@ public class AddTaskActivity extends MapActivity{
 		
 		me=new MyLocationOverlay(this, locMapView);
 		locMapView.getOverlays().add(me);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		if(adapter!=null)
+			adapter.close();
 	}
 
 	/**

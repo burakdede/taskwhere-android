@@ -3,9 +3,11 @@ package com.taskwhere.android.activity;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,7 +15,6 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
@@ -41,6 +42,7 @@ public class TaskWhereActivity extends Activity {
 	private Cursor taskCursor;
 	private int mSelectedRow = 0;
 	private final static String EDIT_TASK = "com.taskwhere.android.Task";
+	private static final String ARRIVED_ACTION = "com.taskwhere.android.activity.ARRIVED_ACTION";
 	private TaskListAdapter taskListAdapter;
 	
 	/**
@@ -52,6 +54,9 @@ public class TaskWhereActivity extends Activity {
     	
     	requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+        
+        Intent intent = new Intent(this,LocationProxyService.class);
+        startService(intent);
         
         taskList = new ArrayList<Task>();
         openDatabaseAccess();
@@ -110,19 +115,22 @@ public class TaskWhereActivity extends Activity {
 					} else if (pos == 1) {
 						
 						selectedTask.setStatus(1);
-						if(dbAdapter.updateTaskByUniqueId(selectedTask, selectedTask.getUnique_taskid()))
+						if(dbAdapter.updateTaskByUniqueId(selectedTask, selectedTask.getUnique_taskid())){
 							Log.d(TW, "Updated item succesfully");
-						taskList.get(mSelectedRow).setStatus(1);
-						taskListAdapter.notifyDataSetChanged();
-						taskListView.invalidate();
+							taskList.get(mSelectedRow).setStatus(1);
+							taskListAdapter.notifyDataSetChanged();
+							taskListView.invalidate();
+						}
 					} else if (pos == 2) {
 						
 						if(dbAdapter.deleteTaskByUniqueId(selectedTask.getUnique_taskid())){
-							Log.d(TW, "Deleted succesfully");	
+							Log.d(TW, "Deleted succesfully");
+							removeOldProximityAlert(selectedTask.getUnique_taskid());
+							taskList.remove(mSelectedRow);
+							taskListAdapter.notifyDataSetChanged();
+							taskListView.invalidate();
 						}
-						taskList.remove(mSelectedRow);
-						taskListAdapter.notifyDataSetChanged();
-						taskListView.invalidate();
+						
 					}	
 				}
 			});
@@ -152,7 +160,21 @@ public class TaskWhereActivity extends Activity {
         actionBar.addAction(addAction);
     }
     
-    /**
+    protected void removeOldProximityAlert(int unique_taskid) {
+    	
+    	String context = Context.LOCATION_SERVICE;
+    	LocationManager locationManager = (LocationManager) getSystemService(context);
+
+    	Intent anIntent = new Intent(ARRIVED_ACTION);
+		PendingIntent operation = 
+				PendingIntent.getBroadcast(getApplicationContext(), unique_taskid , anIntent, 0);
+			
+		String contenxt = Context.LOCATION_SERVICE;
+		locationManager = (LocationManager) getSystemService(contenxt);
+		locationManager.removeProximityAlert(operation);
+	}
+
+	/**
      * get profiles from {@link TaskListDbAdapter}
      * and store in list to show with listview
      */
@@ -185,7 +207,8 @@ public class TaskWhereActivity extends Activity {
     @Override
     protected void onDestroy() {
     	super.onDestroy();
-    	dbAdapter.close();
+    	if(dbAdapter != null)
+    		dbAdapter.close();
     }
     
     public static Intent createIntent(Context context) {

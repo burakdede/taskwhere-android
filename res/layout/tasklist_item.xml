@@ -47,6 +47,7 @@
      	android:layout_width="wrap_content"
      	android:paddingRight="15dip"
      	android:paddingTop="15dip"
+     	android:layout_marginTop="10dip"
      	android:layout_alignParentBottom="true"
      	android:layout_alignParentRight="true"
      	android:src="@drawable/taskwait"

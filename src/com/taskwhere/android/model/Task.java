@@ -32,6 +32,7 @@ public class Task implements Serializable{
 		this.taskLat = taskLat;
 		this.taskLon = taskLon;
 		this.unique_taskid = unique_taskid;
+		this.status = 0;
 	}
 	
 	public Task(String taskText, String taskLoc, double taskLat, double taskLon, int unique_taskid,int status){
