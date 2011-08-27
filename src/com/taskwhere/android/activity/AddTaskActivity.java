@@ -7,9 +7,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -19,6 +21,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -65,7 +68,10 @@ public class AddTaskActivity extends MapActivity{
 	private final static String SEARCH_REDIRECT = "search_redirect";
 	private final static String SEARCH_ADDRESS = "search_address";
 	private final static String EDIT_TASK = "com.taskwhere.android.Task";
+	private static final String ARRIVED_ACTION = "com.taskwhere.android.activity.ARRIVED_ACTION";
+	private SharedPreferences preferences;
 	
+	private static int unique_id;
 	private Button saveButton;
 	private EditText taskLoc;
 	private EditText taskText;
@@ -109,6 +115,10 @@ public class AddTaskActivity extends MapActivity{
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(),marker.getIntrinsicHeight());
 
 			
+		preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		unique_id = preferences.getInt("UNIQUEID", 0);
+		Log.d(TW, "Preferences Unique_id = " + unique_id);
+		
 		Bundle extras = getIntent().getExtras();
 	        
 	    /*
@@ -158,7 +168,6 @@ public class AddTaskActivity extends MapActivity{
 				updateWithNewLocation(location, marker);
 				locMapView.requestFocus();
 	    	}
-	    	
 	    }else{
 	        	
 	       	showDialog(1);
@@ -167,12 +176,31 @@ public class AddTaskActivity extends MapActivity{
 	        
 	    saveButton = (Button) findViewById(R.id.saveButton);
 	    saveButton.setOnClickListener(new OnClickListener() {
-			
+		
+	    	
 			@Override
 			public void onClick(View v) {
 				
 				Task newTask = new Task(taskText.getText().toString(), taskLoc.getText().toString()
-						, location.getLatitude(), location.getLongitude(),23 );
+						, location.getLatitude(), location.getLongitude(),0);
+				
+				/*====================== PROXIMITY ALERT REGISTRATION ================*/
+				String contenxt = Context.LOCATION_SERVICE;
+				locationManager = (LocationManager) getSystemService(contenxt);
+				
+				Intent anIntent = new Intent(ARRIVED_ACTION);
+
+				PendingIntent operation = PendingIntent.getBroadcast(getApplicationContext(), ++unique_id , anIntent, 0);
+				locationManager.addProximityAlert(newTask.getTaskLat(), newTask.getTaskLon(), 1000, -1, operation);
+				Log.d(TW, "Unique id of the saved profile is : " + unique_id);
+
+				SharedPreferences.Editor editor = preferences.edit();
+				editor.putInt("UNIQUEID",unique_id);
+				editor.commit();
+				Log.d(TW, "Latest saved Unique_id = " + unique_id);
+				newTask.setUnique_taskid(unique_id);
+				/*======================== END OF REGISTRATION ========================*/
+				
 				TaskListDbAdapter adapter = new TaskListDbAdapter(getApplicationContext());
 				adapter.open();
 				adapter.insertNewTask(newTask);

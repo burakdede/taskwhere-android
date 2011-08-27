@@ -11,7 +11,7 @@
 	    app:title="Task Where"
 	    style="@style/ActionBar"/>	  
 
-	<LinearLayout
+	<RelativeLayout
 	  android:orientation="horizontal"
 	  android:layout_width="fill_parent"
 	  android:layout_height="wrap_content"
@@ -20,33 +20,22 @@
 		<TextView 
 			android:id="@+id/header1"
 			android:layout_height="wrap_content"
-			android:layout_width="fill_parent"
-			android:layout_weight="1"
-			android:gravity="center_vertical|center_horizontal"
-			android:text="Status"
-			android:padding="5dip"
-			style="@style/TaskListHeaderTitle"/>
-
-	    <TextView 
-			android:id="@+id/header2"
-			android:layout_height="wrap_content"
-			android:layout_width="fill_parent"
-			android:layout_weight="1"
-			android:gravity="center_vertical|center_horizontal"
-			android:text="Task"
+			android:layout_width="wrap_content"
+			android:text="Task Details"
+			android:layout_marginLeft="20dip"
 			android:padding="5dip"
 			style="@style/TaskListHeaderTitle"/>
 
 		<TextView
 			android:id="@+id/header3"
 			android:layout_height="wrap_content"
-			android:layout_width="fill_parent"
-			android:layout_weight="1"
-			android:text="Location"
-			android:gravity="center_vertical|center_horizontal"
+			android:layout_width="wrap_content"
+			android:layout_alignParentRight="true"
+			android:layout_marginRight="20dip"
+			android:text="Status"
 			android:padding="5dip"
 			style="@style/TaskListHeaderTitle"/>
-	</LinearLayout>   
+	</RelativeLayout>   
 
 	<ListView 
 		android:id="@+id/taskListView"

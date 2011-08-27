@@ -41,6 +41,7 @@ public class TaskWhereActivity extends Activity {
 	private Cursor taskCursor;
 	private int mSelectedRow = 0;
 	private final static String EDIT_TASK = "com.taskwhere.android.Task";
+	private TaskListAdapter taskListAdapter;
 	
 	/**
 	 * setup actionbar pattern using {@link ActionBar}
@@ -67,7 +68,8 @@ public class TaskWhereActivity extends Activity {
         	
         	showSavedProfiles();
             taskListView = (ListView) findViewById(R.id.taskListView);
-            taskListView.setAdapter(new TaskListAdapter(this, taskList));
+            taskListAdapter = new TaskListAdapter(this, taskList);
+            taskListView.setAdapter(taskListAdapter);
             
         	ActionItem addAction = new ActionItem();
 			addAction.setTitle("Edit");
@@ -106,8 +108,15 @@ public class TaskWhereActivity extends Activity {
 						startActivity(callIntent);
 						//Toast.makeText(AddTaskActivity.this, "Add item selected on row " + mSelectedRow, Toast.LENGTH_SHORT).show();
 					} else if (pos == 1) {
-
-						Toast.makeText(TaskWhereActivity.this, "Accept item selected on row " + mSelectedRow, Toast.LENGTH_SHORT).show();
+						
+						Log.d(TW, taskList.get(pos).toString());
+						selectedTask.setStatus(1);
+						if(dbAdapter.updateTaskByUniqueId(selectedTask, selectedTask.getUnique_taskid()))
+							Log.d(TW, "Updated item succesfully");
+						taskListView.invalidate();
+						taskListAdapter.notifyDataSetChanged();
+						
+						//Toast.makeText(TaskWhereActivity.this, "Accept item selected on row " + mSelectedRow, Toast.LENGTH_SHORT).show();
 					} else if (pos == 2) {
 						Toast.makeText(TaskWhereActivity.this, "Upload items selected on row " + mSelectedRow, Toast.LENGTH_SHORT).show();
 					}	

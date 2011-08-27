@@ -1,14 +1,10 @@
 package com.taskwhere.android.adapter;
 
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.content.Context;
-import android.text.Spannable;
-import android.text.TextPaint;
-import android.text.style.URLSpan;
-import android.text.util.Linkify;
+import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +44,7 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 		public ImageView taskStatus;
 		public TextView taskText;
 		public TextView taskLoc;
+		public ImageView taskStatusImage;
 	}
 	
 	/**
@@ -82,17 +79,20 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 			holder.taskStatus = (ImageView) v.findViewById(R.id.taskStatus);
 			holder.taskText = (TextView) v.findViewById(R.id.taskText);
 			holder.taskLoc = (TextView) v.findViewById(R.id.taskLoc);
+			holder.taskStatusImage = (ImageView) v.findViewById(R.id.taskStatusImage);
 			v.setTag(holder);
 		}else
 			holder = (ViewHolder) v.getTag();
 		
 		//set task resource according to status
 		Task task = taskList.get(position);
-		Log.d(TW, task.toString());
-		holder.taskStatus.setImageResource(task.getStatus() == 0 ?
-							R.drawable.location_icon : R.drawable.ic_accept);		
+		holder.taskStatus.setImageResource(R.drawable.location_icon);		
 		holder.taskText.setText(task.getTaskText());
-		holder.taskLoc.setText("@" + task.getTaskLoc(),BufferType.SPANNABLE);
+		//set paint strike if task is already done
+		if(task.getStatus() == 1)
+			holder.taskText.setPaintFlags(holder.taskText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+		holder.taskLoc.setText("@ " + task.getTaskLoc(),BufferType.SPANNABLE);
+		holder.taskStatusImage.setImageResource(task.getStatus() == 0 ? R.drawable.taskwait : R.drawable.taskdone);
 		
 		return v;
 	}

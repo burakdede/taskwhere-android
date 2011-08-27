@@ -98,6 +98,26 @@ public class TaskListDbAdapter {
 	}
 	
 	/**
+	 * Get task by its unique proximity id
+	 * @param unique_id
+	 * @return
+	 */
+	public boolean updateTaskByUniqueId(Task task, int unique_id){
+		
+		String whereClause = UNIQUEID + "=" + unique_id;
+		
+		ContentValues cv = new ContentValues();
+		cv.put(TASK_TEXT, task.getTaskText());
+		cv.put(TASK_LOC, task.getTaskLoc());
+		cv.put(TASK_LAT, task.getTaskLat());
+		cv.put(TASK_LON, task.getTaskLon());
+		cv.put(UNIQUEID, task.getUnique_taskid());
+		cv.put(STATUS, task.getStatus());
+		
+		return db.update(DATABASE_TABLE, cv, whereClause, null) > 0;
+	}
+	
+	/**
 	 * 
 	 * @author burak
 	 * @date 26 Aug 2011
