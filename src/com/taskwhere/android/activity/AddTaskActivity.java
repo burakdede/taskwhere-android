@@ -65,15 +65,15 @@ public class AddTaskActivity extends MapActivity{
 	private Drawable marker;
 	private LocationManager locationManager;
 	private ProgressDialog loadingDialog;
-	private final static String SEARCH_REDIRECT = "search_redirect";
-	private final static String SEARCH_ADDRESS = "search_address";
+	private final static String SEARCH_REDIRECT = "com.taskwhere.android.activity.SEARCH_REDIRECT";
+	private final static String SEARCH_ADDRESS = "com.taskwhere.android.activity.SEARCH_ADDRESS";
 	private final static String EDIT_TASK = "com.taskwhere.android.Task";
 	private static final String ARRIVED_ACTION = "com.taskwhere.android.ARRIVED_ACTION";
 	private static final String ACTIVE_TASK_LOC = "com.taskwhere.android.model.TaskLoc";
 	private static final String ACTIVE_TASK_TEXT = "com.taskwhere.android.model.TaskText";
-	private static final String ACTIVE_TASK_STATUS = "com.taskwhere.android.model.TaskStatus";
 	private SharedPreferences preferences;
 	private TaskListDbAdapter adapter;
+	private static boolean isEditing = false;
 	
 	private static int unique_id;
 	private Button saveButton;
@@ -97,6 +97,7 @@ public class AddTaskActivity extends MapActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_task);
 
+		saveButton = (Button) findViewById(R.id.saveButton);
 		ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
 		actionBar.setHomeAction(new IntentAction(this, TaskWhereActivity.createIntent(this),R.drawable.home));
 		
@@ -142,7 +143,6 @@ public class AddTaskActivity extends MapActivity{
 	            Geocoder gc = new Geocoder(getApplicationContext());
 	            try {
 	    			List<Address> results = gc.getFromLocationName(address, 1);
-	    				
 	    			if(results != null){
 	    				if(results.size() >0){
 	    					showDialog(1);
@@ -160,10 +160,11 @@ public class AddTaskActivity extends MapActivity{
 	    	}
 	    	
 	    	if(extras.getSerializable(EDIT_TASK) != null){
-	        	Log.d(TW, "There is edit object with intent");
+
 	        	Task editTask = (Task) extras.getSerializable(EDIT_TASK);
 	        	Log.d(TW, editTask.toString());
-	        	
+	        	isEditing = true;
+	        	saveButton.setText("Update Task");
 	        	taskLoc.setText(editTask.getTaskLoc());
 	        	taskText.setText(editTask.getTaskText());
 	        	location = new Location(LocationManager.PASSIVE_PROVIDER);
@@ -177,10 +178,8 @@ public class AddTaskActivity extends MapActivity{
 	       	showDialog(1);
 	    	getCurrentLocation();
 	    }
-	        
-	    saveButton = (Button) findViewById(R.id.saveButton);
+	    
 	    saveButton.setOnClickListener(new OnClickListener() {
-		
 	    	
 			@Override
 			public void onClick(View v) {
@@ -189,14 +188,46 @@ public class AddTaskActivity extends MapActivity{
 						, location.getLatitude(), location.getLongitude(),0);
 				Log.d(TW, newTask.toString());
 				
-				/*====================== PROXIMITY ALERT REGISTRATION ================*/
+				if(!isEditing){ //seems like its a new task insertion
+					
+					registerNewTaskProximityAlert(newTask);
+					adapter = new TaskListDbAdapter(getApplicationContext());
+					adapter.open();
+					adapter.insertNewTask(newTask);
+					
+				}else{ //nope its a edit task operation
+					
+					//first remove old proximity alert in case if location changed
+					if(newTask.getStatus() == 1){ //task marked as done
+						Toast makeToast = Toast.makeText(getApplicationContext(), 
+								"Seems like you are editing task already done. That have no effect", Toast.LENGTH_LONG);
+						makeToast.show();
+					}else if(newTask.getStatus() == 0){ //still waiting task
+						removeOldProximityAlert(newTask.getUnique_taskid());
+						registerNewTaskProximityAlert(newTask);
+						adapter = new TaskListDbAdapter(getApplicationContext());
+						adapter.open();
+						adapter.updateTaskByUniqueId(newTask);	
+					}
+				}
+				
+				Intent listIntent = new Intent();
+				listIntent.setClass(getApplicationContext(), TaskWhereActivity.class);
+				startActivity(listIntent);
+			}
+
+			/*
+			 * register new proximity alert according to
+			 * task cridentials
+			 */
+			private void registerNewTaskProximityAlert(Task newTask) {
+				
 				String contenxt = Context.LOCATION_SERVICE;
 				locationManager = (LocationManager) getSystemService(contenxt);
 				
 				Intent anIntent = new Intent(ARRIVED_ACTION);
 				anIntent.putExtra(ACTIVE_TASK_LOC, newTask.getTaskLoc());
 				anIntent.putExtra(ACTIVE_TASK_TEXT, newTask.getTaskText());
-				anIntent.putExtra(ACTIVE_TASK_STATUS, newTask.getStatus());
 
 				PendingIntent operation = PendingIntent.getBroadcast(getApplicationContext(), ++unique_id , anIntent, 0);
 				locationManager.addProximityAlert(newTask.getTaskLat(), newTask.getTaskLon(), 2000, -1, operation);
@@ -207,21 +238,22 @@ public class AddTaskActivity extends MapActivity{
 				editor.commit();
 				Log.d(TW, "Latest saved Unique_id = " + unique_id);
 				newTask.setUnique_taskid(unique_id);
-				/*======================== END OF REGISTRATION ========================*/
-				
-				adapter = new TaskListDbAdapter(getApplicationContext());
-				adapter.open();
-				adapter.insertNewTask(newTask);
-				
-				
-				Intent listIntent = new Intent();
-				listIntent.setClass(getApplicationContext(), TaskWhereActivity.class);
-				startActivity(listIntent);
 			}
 		});
 		
 		me=new MyLocationOverlay(this, locMapView);
 		locMapView.getOverlays().add(me);
+	}
+
+	protected void removeOldProximityAlert(int unique_taskid) {
+    	
+    	String context = Context.LOCATION_SERVICE;
+    	LocationManager locationManager = (LocationManager) getSystemService(context);
+
+    	Intent anIntent = new Intent(ARRIVED_ACTION);
+		PendingIntent operation = 
+				PendingIntent.getBroadcast(getApplicationContext(), unique_taskid , anIntent, 0);
+		locationManager.removeProximityAlert(operation);
 	}
 	
 	@Override

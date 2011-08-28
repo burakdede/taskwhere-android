@@ -108,9 +108,9 @@ public class TaskListDbAdapter {
 	 * @param unique_id
 	 * @return
 	 */
-	public boolean updateTaskByUniqueId(Task task, int unique_id){
+	public boolean updateTaskByUniqueId(Task task){
 		
-		String whereClause = UNIQUEID + "=" + unique_id;
+		String whereClause = UNIQUEID + "=" + task.getUnique_taskid();
 		
 		ContentValues cv = new ContentValues();
 		cv.put(TASK_TEXT, task.getTaskText());

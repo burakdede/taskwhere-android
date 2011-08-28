@@ -27,7 +27,6 @@ public class ProximityAlertReciever extends BroadcastReceiver{
 	private int NOTIFICATION_ID = 0;
 	private static final String ACTIVE_TASK_LOC = "com.taskwhere.android.model.TaskLoc";
 	private static final String ACTIVE_TASK_TEXT = "com.taskwhere.android.model.TaskText";
-	private static final String ACTIVE_TASK_STATUS = "com.taskwhere.android.model.TaskStatus";
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -38,20 +37,17 @@ public class ProximityAlertReciever extends BroadcastReceiver{
 		Bundle bundle = intent.getExtras();
 		String taskLoc = bundle.getString(ACTIVE_TASK_LOC);
 		String taskText = bundle.getString(ACTIVE_TASK_TEXT);
-		int taskStatus = bundle.getInt(ACTIVE_TASK_STATUS, 0);
-		
+
 		if(entering){
-			Log.d(TW, "Entered the proximity area");
-			createNotification(context, "Task : \"" + taskText + "\""
-					,"OH! Are you near in " + taskLoc + " ?");
+				Log.d(TW, "Entered the proximity area");
+				createNotification(context, "Task : \"" + taskText + "\""
+						,"OH! Near in " + taskLoc + " ?");
 		}else{
-			Log.d(TW, "Quitted from proximity area");
-			if(taskStatus == 0){			
+				Log.d(TW, "Quitted from proximity area");
 				Log.d(TW, "Task still did not accomplished");
 				createNotification(context, "Task : \"" + taskText + "\""
 						,"SNAP! Leaving " + taskLoc + " already ?");
 			}
-		}
 	}
 	
 	/**
@@ -69,7 +65,7 @@ public class ProximityAlertReciever extends BroadcastReceiver{
 				(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE) ; 
 
 		int icon = R.drawable.notf_icon;        
-		CharSequence tickerText = "Get A Life"; 
+		CharSequence tickerText = "TaskWhere"; 
 		long when = System.currentTimeMillis();   
 		
 		Intent notificationIntent = new Intent(context,TaskWhereActivity.class);

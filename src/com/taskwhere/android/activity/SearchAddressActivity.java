@@ -29,8 +29,8 @@ import com.markupartist.android.widget.ActionBar.IntentAction;
 public class SearchAddressActivity extends Activity {
 
 	private static boolean addressSearch;
-	private final static String SEARCH_REDIRECT = "search_redirect";
-	private final static String SEARCH_ADDRESS = "search_address";
+	private final static String SEARCH_REDIRECT = "com.taskwhere.android.activity.SEARCH_REDIRECT";
+	private final static String SEARCH_ADDRESS = "com.taskwhere.android.activity.SEARCH_ADDRESS";
 	private final static String TW = "Task Where";
 	private ProgressDialog loadingDialog;
 	

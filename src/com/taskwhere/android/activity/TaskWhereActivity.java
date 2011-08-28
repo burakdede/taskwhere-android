@@ -106,23 +106,25 @@ public class TaskWhereActivity extends Activity {
 					Log.d(TW, "Selected position : " + mSelectedRow);
 					Task selectedTask = taskList.get(mSelectedRow);
 					
-					if (pos == 0) {//edit item 
+					if (pos == 0) { //edit item 
 						
 						callIntent = new Intent();
 						callIntent.setClass(getApplicationContext(), AddTaskActivity.class);
 						callIntent.putExtra(EDIT_TASK, selectedTask);
 						startActivity(callIntent);
 						
-					} else if (pos == 1) {
+					} else if (pos == 1) { // mark as done
 						
 						selectedTask.setStatus(1);
-						if(dbAdapter.updateTaskByUniqueId(selectedTask, selectedTask.getUnique_taskid())){
+						if(dbAdapter.updateTaskByUniqueId(selectedTask)){
 							Log.d(TW, "Updated item succesfully");
 							taskList.get(mSelectedRow).setStatus(1);
+							taskList.set(mSelectedRow, selectedTask);
+							removeOldProximityAlert(taskList.get(mSelectedRow).getUnique_taskid());
 							taskListAdapter.notifyDataSetChanged();
 							taskListView.invalidate();
 						}
-					} else if (pos == 2) {
+					} else if (pos == 2) { //delete task
 						
 						if(dbAdapter.deleteTaskByUniqueId(selectedTask.getUnique_taskid())){
 							Log.d(TW, "Deleted succesfully");
