@@ -42,7 +42,7 @@ public class TaskWhereActivity extends Activity {
 	private Cursor taskCursor;
 	private int mSelectedRow = 0;
 	private final static String EDIT_TASK = "com.taskwhere.android.Task";
-	private static final String ARRIVED_ACTION = "com.taskwhere.android.activity.ARRIVED_ACTION";
+	private static final String ARRIVED_ACTION = "com.taskwhere.android.ARRIVED_ACTION";
 	private TaskListAdapter taskListAdapter;
 	
 	/**
@@ -55,7 +55,7 @@ public class TaskWhereActivity extends Activity {
     	requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         
-        Intent intent = new Intent(this,LocationProxyService.class);
+        Intent intent = new Intent(getApplicationContext(),LocationProxyService.class);
         startService(intent);
         
         taskList = new ArrayList<Task>();
@@ -112,6 +112,7 @@ public class TaskWhereActivity extends Activity {
 						callIntent.setClass(getApplicationContext(), AddTaskActivity.class);
 						callIntent.putExtra(EDIT_TASK, selectedTask);
 						startActivity(callIntent);
+						
 					} else if (pos == 1) {
 						
 						selectedTask.setStatus(1);
@@ -129,8 +130,12 @@ public class TaskWhereActivity extends Activity {
 							taskList.remove(mSelectedRow);
 							taskListAdapter.notifyDataSetChanged();
 							taskListView.invalidate();
+							if(taskList.size() == 0){
+								getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.tasklist_empty);
+								setContentView(R.layout.tasklist_empty);
+								setUpActionBar(actionBar);
+							}
 						}
-						
 					}	
 				}
 			});
@@ -151,7 +156,12 @@ public class TaskWhereActivity extends Activity {
         }
         
         
-        //set actionbar intents and activities accordingly
+        setUpActionBar(actionBar);
+    }
+    
+    public void setUpActionBar(ActionBar actionBar){
+    	
+    	//set actionbar intents and activities accordingly
         actionBar = (ActionBar) findViewById(R.id.actionbar);
         actionBar.setHomeAction(new IntentAction(this, createIntent(this),R.drawable.home));
         final Action infoAction = new IntentAction(this, InfoActivity.createIntent(this), R.drawable.info);
@@ -168,9 +178,6 @@ public class TaskWhereActivity extends Activity {
     	Intent anIntent = new Intent(ARRIVED_ACTION);
 		PendingIntent operation = 
 				PendingIntent.getBroadcast(getApplicationContext(), unique_taskid , anIntent, 0);
-			
-		String contenxt = Context.LOCATION_SERVICE;
-		locationManager = (LocationManager) getSystemService(contenxt);
 		locationManager.removeProximityAlert(operation);
 	}
 

@@ -68,7 +68,10 @@ public class AddTaskActivity extends MapActivity{
 	private final static String SEARCH_REDIRECT = "search_redirect";
 	private final static String SEARCH_ADDRESS = "search_address";
 	private final static String EDIT_TASK = "com.taskwhere.android.Task";
-	private static final String ARRIVED_ACTION = "com.taskwhere.android.activity.ARRIVED_ACTION";
+	private static final String ARRIVED_ACTION = "com.taskwhere.android.ARRIVED_ACTION";
+	private static final String ACTIVE_TASK_LOC = "com.taskwhere.android.model.TaskLoc";
+	private static final String ACTIVE_TASK_TEXT = "com.taskwhere.android.model.TaskText";
+	private static final String ACTIVE_TASK_STATUS = "com.taskwhere.android.model.TaskStatus";
 	private SharedPreferences preferences;
 	private TaskListDbAdapter adapter;
 	
@@ -184,17 +187,21 @@ public class AddTaskActivity extends MapActivity{
 				
 				Task newTask = new Task(taskText.getText().toString(), taskLoc.getText().toString()
 						, location.getLatitude(), location.getLongitude(),0);
+				Log.d(TW, newTask.toString());
 				
 				/*====================== PROXIMITY ALERT REGISTRATION ================*/
 				String contenxt = Context.LOCATION_SERVICE;
 				locationManager = (LocationManager) getSystemService(contenxt);
 				
 				Intent anIntent = new Intent(ARRIVED_ACTION);
+				anIntent.putExtra(ACTIVE_TASK_LOC, newTask.getTaskLoc());
+				anIntent.putExtra(ACTIVE_TASK_TEXT, newTask.getTaskText());
+				anIntent.putExtra(ACTIVE_TASK_STATUS, newTask.getStatus());
 
 				PendingIntent operation = PendingIntent.getBroadcast(getApplicationContext(), ++unique_id , anIntent, 0);
-				locationManager.addProximityAlert(newTask.getTaskLat(), newTask.getTaskLon(), 1000, -1, operation);
+				locationManager.addProximityAlert(newTask.getTaskLat(), newTask.getTaskLon(), 2000, -1, operation);
 				Log.d(TW, "Unique id of the saved profile is : " + unique_id);
-
+				
 				SharedPreferences.Editor editor = preferences.edit();
 				editor.putInt("UNIQUEID",unique_id);
 				editor.commit();
