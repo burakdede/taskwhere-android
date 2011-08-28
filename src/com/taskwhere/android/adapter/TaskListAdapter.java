@@ -66,6 +66,11 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 		}
 	}*/
 	
+	public void updateData(){
+		
+		this.notifyDataSetChanged();
+	}
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
@@ -87,6 +92,7 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 		
 		
 		Task task = taskList.get(position);
+		Log.d(TW, "Position from getView: " + position);
 		
 		holder.taskStatus.setImageResource(R.drawable.location_icon);		
 		holder.taskText.setText(task.getTaskText());
@@ -94,6 +100,8 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 		if(task.getStatus() == 1){
 			Log.d(TW, "Task is done put strike over text");
 			holder.taskText.setPaintFlags(holder.taskText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+		}else{
+			holder.taskText.setPaintFlags( holder.taskText.getPaintFlags ( ) & ~Paint.STRIKE_THRU_TEXT_FLAG );
 		}
 		holder.taskLoc.setText("@ " + task.getTaskLoc(),BufferType.SPANNABLE);
 		
@@ -104,7 +112,6 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 			Log.d(TW, "Task is done put done image");
 			holder.taskStatusImage.setImageResource(R.drawable.taskdone);
 		}
-		
 		
 		return v;
 	}

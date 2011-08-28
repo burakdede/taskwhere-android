@@ -197,18 +197,20 @@ public class AddTaskActivity extends MapActivity{
 					
 				}else{ //nope its a edit task operation
 					
-					//first remove old proximity alert in case if location changed
-					if(newTask.getStatus() == 1){ //task marked as done
-						Toast makeToast = Toast.makeText(getApplicationContext(), 
-								"Seems like you are editing task already done. That have no effect", Toast.LENGTH_LONG);
-						makeToast.show();
-					}else if(newTask.getStatus() == 0){ //still waiting task
-						removeOldProximityAlert(newTask.getUnique_taskid());
-						registerNewTaskProximityAlert(newTask);
-						adapter = new TaskListDbAdapter(getApplicationContext());
-						adapter.open();
-						adapter.updateTaskByUniqueId(newTask);	
-					}
+					//update with new settings
+					newTask.setTaskText(taskText.getText().toString());
+					newTask.setTaskLoc(taskLoc.getText().toString());
+					newTask.setTaskLat(location.getLatitude());
+					newTask.setTaskLon(location.getLongitude());
+					
+					//update task on db
+					adapter = new TaskListDbAdapter(getApplicationContext());
+					adapter.open();
+					adapter.updateTaskByUniqueId(newTask);
+					
+					//remove old proximity and register new one
+					removeOldProximityAlert(newTask.getUnique_taskid());
+					registerNewTaskProximityAlert(newTask);
 				}
 				
 				Intent listIntent = new Intent();
@@ -260,6 +262,8 @@ public class AddTaskActivity extends MapActivity{
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		locationManager.removeUpdates(gpsLocationListener);
+		locationManager.removeUpdates(networklocationListener);
 		if(adapter!=null)
 			adapter.close();
 	}

@@ -40,7 +40,7 @@ public class TaskWhereActivity extends Activity {
 	private static ActionBar actionBar;
 	private TaskListDbAdapter dbAdapter;
 	private Cursor taskCursor;
-	private int mSelectedRow = 0;
+	private static int mSelectedRow;
 	private final static String EDIT_TASK = "com.taskwhere.android.Task";
 	private static final String ARRIVED_ACTION = "com.taskwhere.android.ARRIVED_ACTION";
 	private TaskListAdapter taskListAdapter;
@@ -59,7 +59,7 @@ public class TaskWhereActivity extends Activity {
         startService(intent);
         
         taskList = new ArrayList<Task>();
-        openDatabaseAccess();
+        openDatabaseAccess();   
         taskCursor = dbAdapter.getAllTasks();
         
         if(taskCursor.getCount() == 0){
@@ -116,22 +116,24 @@ public class TaskWhereActivity extends Activity {
 					} else if (pos == 1) { // mark as done
 						
 						selectedTask.setStatus(1);
+						taskList.get(mSelectedRow).setStatus(1);
+						taskList.set(mSelectedRow, selectedTask);
+						taskListAdapter.updateData();
 						if(dbAdapter.updateTaskByUniqueId(selectedTask)){
 							Log.d(TW, "Updated item succesfully");
-							taskList.get(mSelectedRow).setStatus(1);
-							taskList.set(mSelectedRow, selectedTask);
 							removeOldProximityAlert(taskList.get(mSelectedRow).getUnique_taskid());
-							taskListAdapter.notifyDataSetChanged();
-							taskListView.invalidate();
+							taskListAdapter.updateData();
 						}
+						
 					} else if (pos == 2) { //delete task
 						
+						taskList.remove(mSelectedRow);
+						taskListAdapter.updateData();
 						if(dbAdapter.deleteTaskByUniqueId(selectedTask.getUnique_taskid())){
 							Log.d(TW, "Deleted succesfully");
 							removeOldProximityAlert(selectedTask.getUnique_taskid());
-							taskList.remove(mSelectedRow);
-							taskListAdapter.notifyDataSetChanged();
-							taskListView.invalidate();
+							taskListAdapter.updateData();
+							
 							if(taskList.size() == 0){
 								getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.tasklist_empty);
 								setContentView(R.layout.tasklist_empty);
@@ -152,6 +154,7 @@ public class TaskWhereActivity extends Activity {
 				public void onItemClick(AdapterView<?> arg0, View view,
 						int arg2, long arg3) {
 					mSelectedRow = arg2;
+					Log.d(TW, "Selected Profile : " + taskList.get(mSelectedRow));
 					mQuickAction.show(view);
 				}
 			});
@@ -189,6 +192,7 @@ public class TaskWhereActivity extends Activity {
      */
     public void showSavedProfiles(){
     	
+    	taskList.clear();
     	startManagingCursor(taskCursor);
     	Log.d(TW, "Cursor count : " + taskCursor.getCount());
     	
@@ -199,8 +203,6 @@ public class TaskWhereActivity extends Activity {
         				taskCursor.getDouble(3), taskCursor.getDouble(4), taskCursor.getInt(5),taskCursor.getInt(6)));
     		}while(taskCursor.moveToNext());
     	}
-    	if(taskCursor != null)
-    		taskCursor.close();
     }
     
     
@@ -218,6 +220,8 @@ public class TaskWhereActivity extends Activity {
     	super.onDestroy();
     	if(dbAdapter != null)
     		dbAdapter.close();
+    	if(taskCursor != null)
+    		taskCursor.close();
     }
     
     public static Intent createIntent(Context context) {
