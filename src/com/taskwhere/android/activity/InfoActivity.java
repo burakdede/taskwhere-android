@@ -1,13 +1,16 @@
 package com.taskwhere.android.activity;
 
 import com.markupartist.android.widget.ActionBar;
+import com.markupartist.android.widget.ActionBar.Action;
 import com.markupartist.android.widget.ActionBar.IntentAction;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
+import android.widget.Toast;
 
 /**
  * 
@@ -26,10 +29,18 @@ public class InfoActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.info);
 		
-		ActionBar actioBar = (ActionBar) findViewById(R.id.actionbar);
-		actioBar.setHomeAction(new IntentAction(this, TaskWhereActivity.createIntent(this), R.drawable.home));
+		ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
+		actionBar.setHomeAction(new IntentAction(this, TaskWhereActivity.createIntent(this), R.drawable.home));
+		
+		Intent mailIntent = new Intent(Intent.ACTION_SEND);
+		mailIntent.setType("text/plain");
+		mailIntent.putExtra(Intent.EXTRA_EMAIL  , new String[]{"burakdede87@gmail.com"});
+		mailIntent.putExtra(Intent.EXTRA_SUBJECT, "[TaskWhere] FeedBack");
+		
+		final Action mailAction = new IntentAction(this, mailIntent , R.drawable.email);
+        actionBar.addAction(mailAction);	
 	}
-
+	
 	public static Intent createIntent(Context context) {
 		
 		Intent i = new Intent(context, InfoActivity.class);

@@ -88,11 +88,11 @@ containing a value of this type.
         public static final int custom_button_green=0x7f02000d;
         public static final int delete_item=0x7f02000e;
         public static final int divider=0x7f02000f;
-        public static final int empty_back=0x7f020010;
-        public static final int empty_back_test=0x7f020011;
-        public static final int foursquare_gradient=0x7f020012;
-        public static final int home=0x7f020013;
-        public static final int homeicon=0x7f020014;
+        public static final int email=0x7f020010;
+        public static final int empty_back=0x7f020011;
+        public static final int empty_back_test=0x7f020012;
+        public static final int foursquare_gradient=0x7f020013;
+        public static final int home=0x7f020014;
         public static final int ic_accept=0x7f020015;
         public static final int ic_add=0x7f020016;
         public static final int ic_menu_places=0x7f020017;
