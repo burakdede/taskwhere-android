@@ -107,6 +107,7 @@ public class Task implements Serializable{
 	@Override
 	public String toString() {
 
-		return "Task Text : " + this.getTaskText() + " Task Loc : " + this.getTaskLoc() + " Task Status : " + this.getStatus();
+		return "Task Text : " + this.getTaskText() + " Task Loc : " + this.getTaskLoc() + " Task Status : " + this.getStatus()
+				+  " Task unique_id : " + this.getUnique_taskid();
 	}
 }

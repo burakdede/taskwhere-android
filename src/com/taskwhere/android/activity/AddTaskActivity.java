@@ -76,7 +76,7 @@ public class AddTaskActivity extends MapActivity{
 	private static final String ACTIVE_TASK_TEXT = "com.taskwhere.android.model.TaskText";
 	private SharedPreferences preferences;
 	private TaskListDbAdapter adapter;
-	private static boolean isEditing = false;
+	public static boolean isEditing = false;
 	
 	private static int unique_id;
 	private Button saveButton;
@@ -84,6 +84,7 @@ public class AddTaskActivity extends MapActivity{
 	private EditText taskText;
 	private SeekBar radiusBar;
 	private TextView radiusValue;
+	private Task editTask;
 	
 	boolean gpsEnabled;
 	boolean wirelessEnabled;
@@ -101,6 +102,7 @@ public class AddTaskActivity extends MapActivity{
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_task);
+		
 		
 		locMapView = (MapView) findViewById(R.id.locMapView);
 		locMapView.setBuiltInZoomControls(true);
@@ -171,8 +173,9 @@ public class AddTaskActivity extends MapActivity{
 	    					location.setLatitude(x.getLatitude());
 	    					location.setLongitude(x.getLongitude());
 	    					updateWithNewLocation(location, marker);
-	    					locMapView.requestFocus();
 	    				}
+	    			}else{ // no result
+	    				Toast.makeText(getApplicationContext(), "Can not find the given address", Toast.LENGTH_LONG).show();
 	    			}
 	    		} catch (IOException e) {
 	    			e.printStackTrace();
@@ -181,7 +184,7 @@ public class AddTaskActivity extends MapActivity{
 	    	
 	    	if(extras.getSerializable(EDIT_TASK) != null){
 
-	        	Task editTask = (Task) extras.getSerializable(EDIT_TASK);
+	        	editTask = (Task) extras.getSerializable(EDIT_TASK);
 	        	Log.d(TW, editTask.toString());
 	        	isEditing = true;
 	        	saveButton.setText("Update Task");
@@ -193,10 +196,9 @@ public class AddTaskActivity extends MapActivity{
 				location.setLatitude(editTask.getTaskLat());
 				location.setLongitude(editTask.getTaskLon());
 				updateWithNewLocation(location, marker);
-				locMapView.requestFocus();
 	    	}
 	    }else{
-	        	
+	        isEditing = false;
 	       	showDialog(1);
 	    	getCurrentLocation();
 	    }
@@ -206,34 +208,40 @@ public class AddTaskActivity extends MapActivity{
 			@Override
 			public void onClick(View v) {
 				
-				Task newTask = new Task(taskText.getText().toString(), taskLoc.getText().toString()
-						, location.getLatitude(), location.getLongitude(),0, radiusBar.getProgress()+100);
-				Log.d(TW, newTask.toString());
 				
 				if(!isEditing){ //seems like its a new task insertion
 					
-					registerNewTaskProximityAlert(newTask);
+					Task newTask = new Task(taskText.getText().toString(), taskLoc.getText().toString()
+							, location.getLatitude(), location.getLongitude(),0, radiusBar.getProgress()+100);
+					Log.d(TW, "Inserting Task : \n" + newTask.toString());
+					
+					newTask.setUnique_taskid(registerNewTaskProximityAlert(newTask));
 					adapter = new TaskListDbAdapter(getApplicationContext());
 					adapter.open();
 					adapter.insertNewTask(newTask);
 					
 				}else{ //nope its a edit task operation
 					
+					Log.d(TW,"Editing Task :\n" + editTask.toString());
 					//update with new settings
-					newTask.setTaskText(taskText.getText().toString());
-					newTask.setTaskLoc(taskLoc.getText().toString());
-					newTask.setTaskLat(location.getLatitude());
-					newTask.setTaskLon(location.getLongitude());
-					newTask.setProx_radius(radiusBar.getProgress());
+					editTask.setTaskText(taskText.getText().toString());
+					editTask.setTaskLoc(taskLoc.getText().toString());
+					editTask.setTaskLat(location.getLatitude());
+					editTask.setTaskLon(location.getLongitude());
+					editTask.setProx_radius(radiusBar.getProgress());
 					
 					//update task on db
 					adapter = new TaskListDbAdapter(getApplicationContext());
 					adapter.open();
-					adapter.updateTaskByUniqueId(newTask);
+					Log.d(TW, "Number of rows effected : " + adapter.updateTaskByUniqueId(editTask));
 					
-					//remove old proximity and register new one
-					removeOldProximityAlert(newTask.getUnique_taskid());
-					registerNewTaskProximityAlert(newTask);
+					//remove old proximity and register new one if location changed
+					if(location.getLatitude() != editTask.getTaskLat() || location.getLongitude() != editTask.getTaskLon()){
+						removeOldProximityAlert(editTask.getUnique_taskid());
+						editTask.setTaskLat(location.getLatitude());
+						editTask.setTaskLon(location.getLongitude());
+						editTask.setUnique_taskid(registerNewTaskProximityAlert(editTask));
+					}
 				}
 				
 				Intent listIntent = new Intent();
@@ -245,7 +253,7 @@ public class AddTaskActivity extends MapActivity{
 			 * register new proximity alert according to
 			 * task cridentials
 			 */
-			private void registerNewTaskProximityAlert(Task newTask) {
+			private int registerNewTaskProximityAlert(Task newTask) {
 				
 				String contenxt = Context.LOCATION_SERVICE;
 				locationManager = (LocationManager) getSystemService(contenxt);
@@ -262,7 +270,7 @@ public class AddTaskActivity extends MapActivity{
 				editor.putInt("UNIQUEID",unique_id);
 				editor.commit();
 				Log.d(TW, "Latest saved Unique_id = " + unique_id);
-				newTask.setUnique_taskid(unique_id);
+				return unique_id;
 			}
 		});
 		

@@ -90,15 +90,12 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 			holder = (ViewHolder) v.getTag();
 		}
 		
-		
 		Task task = taskList.get(position);
-		Log.d(TW, "Position from getView: " + position);
 		
 		holder.taskStatus.setImageResource(R.drawable.location_icon);		
 		holder.taskText.setText(task.getTaskText());
 
 		if(task.getStatus() == 1){
-			Log.d(TW, "Task is done put strike over text");
 			holder.taskText.setPaintFlags(holder.taskText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 		}else{
 			holder.taskText.setPaintFlags( holder.taskText.getPaintFlags ( ) & ~Paint.STRIKE_THRU_TEXT_FLAG );
@@ -106,10 +103,8 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 		holder.taskLoc.setText("@ " + task.getTaskLoc(),BufferType.SPANNABLE);
 		
 		if(task.getStatus() == 0){
-			Log.d(TW, "Task is waiting put waiting image");
 			holder.taskStatusImage.setImageResource(R.drawable.taskwait);
 		}else if(task.getStatus() == 1){
-			Log.d(TW, "Task is done put done image");
 			holder.taskStatusImage.setImageResource(R.drawable.taskdone);
 		}
 		

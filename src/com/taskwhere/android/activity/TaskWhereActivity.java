@@ -109,6 +109,7 @@ public class TaskWhereActivity extends Activity {
 					
 					if (pos == 0) { //edit item 
 						
+						
 						callIntent = new Intent();
 						callIntent.setClass(getApplicationContext(), AddTaskActivity.class);
 						callIntent.putExtra(EDIT_TASK, selectedTask);
