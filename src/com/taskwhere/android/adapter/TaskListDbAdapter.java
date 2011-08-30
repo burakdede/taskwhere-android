@@ -37,6 +37,7 @@ public class TaskListDbAdapter {
 	public static final String TASK_LON = "longitude";
 	public static final String UNIQUEID = "uniqueid";
 	public static final String STATUS = "status";
+	public static final String PROX_RADIUS = "prox_radius";
 	
 	public TaskListDbAdapter(Context context) {
 		this.context = context;
@@ -74,6 +75,7 @@ public class TaskListDbAdapter {
 		taskValues.put(TASK_LON, task.getTaskLon());
 		taskValues.put(UNIQUEID, task.getUnique_taskid());
 		taskValues.put(STATUS, task.getStatus());
+		taskValues.put(PROX_RADIUS, task.getProx_radius());
 		
 		return db.insert(DATABASE_TABLE, null, taskValues);
 	}
@@ -84,7 +86,7 @@ public class TaskListDbAdapter {
 	 */
 	public Cursor getAllTasks() {
 		return db.query(DATABASE_TABLE, new String [] { KEY_ID, TASK_TEXT , TASK_LOC,
-				TASK_LAT, TASK_LON, UNIQUEID, STATUS }, null, null, null, null, null, null);
+				TASK_LAT, TASK_LON, UNIQUEID, STATUS, PROX_RADIUS }, null, null, null, null, null, null);
 	}
 	
 	
@@ -119,6 +121,7 @@ public class TaskListDbAdapter {
 		cv.put(TASK_LON, task.getTaskLon());
 		cv.put(UNIQUEID, task.getUnique_taskid());
 		cv.put(STATUS, task.getStatus());
+		cv.put(PROX_RADIUS, task.getProx_radius());
 		
 		return db.update(DATABASE_TABLE, cv, whereClause, null) > 0;
 	}
@@ -138,7 +141,8 @@ public class TaskListDbAdapter {
 		}
 		
 		private static final String DATABASE_CREATE = "create table " + DATABASE_TABLE + " (" + KEY_ID + " integer primary key autoincrement, " +
-			TASK_TEXT + " text not null ," + TASK_LOC + " text ,"+ TASK_LAT + " real ," + TASK_LON + " real ," + UNIQUEID + " integer ," + STATUS + " integer );";
+			TASK_TEXT + " text not null ," + TASK_LOC + " text ,"+ TASK_LAT + " real ," + TASK_LON + " real ," + UNIQUEID + " integer ," + PROX_RADIUS
+			+ " integer ," + STATUS + " integer );";
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {

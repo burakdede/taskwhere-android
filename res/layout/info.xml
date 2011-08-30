@@ -1,14 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
-  android:orientation="vertical"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/listview_item_manual">
+	<RelativeLayout
+	  android:orientation="vertical"
+	  android:layout_width="fill_parent"
+	  android:layout_height="fill_parent"
+	  android:background="@drawable/listview_item_manual">
     
     <com.markupartist.android.widget.ActionBar
 	    android:id="@+id/actionbar"
 	    app:title="About TaskWhere"
 	    style="@style/ActionBar"/>
 	    
-</LinearLayout>
+	<TextView 
+		android:id="@+id/taskHeader"
+		android:layout_width="fill_parent"
+		android:layout_height="30dip"
+		android:text="How To Use TaskWhere"
+		android:gravity="center_vertical"
+		android:layout_below="@+id/actionbar"
+		android:paddingLeft="5dip"
+		style="@style/TaskListHeaderTitle"
+		android:background="@drawable/task_item_general_selector"/>
+	    
+	<ImageView 
+		android:id="@+id/infoImage"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_below="@+id/taskHeader"
+		android:src="@drawable/info_item1"/>
+		
+	<ImageView 
+		android:id="@+id/infoImage2"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_below="@+id/infoImage"
+		android:src="@drawable/info_back2"/>
+		
+	<ImageView 
+		android:id="@+id/infoImage3"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_below="@+id/infoImage2"
+		android:src="@drawable/info_back3"/>
+		
+	</RelativeLayout>
+</ScrollView>

@@ -31,6 +31,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
@@ -79,6 +82,8 @@ public class AddTaskActivity extends MapActivity{
 	private Button saveButton;
 	private EditText taskLoc;
 	private EditText taskText;
+	private SeekBar radiusBar;
+	private TextView radiusValue;
 	
 	boolean gpsEnabled;
 	boolean wirelessEnabled;
@@ -96,6 +101,17 @@ public class AddTaskActivity extends MapActivity{
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_task);
+		
+		locMapView = (MapView) findViewById(R.id.locMapView);
+		locMapView.setBuiltInZoomControls(true);
+		mapController = locMapView.getController();
+		
+		locMapView.setStreetView(true);
+		mapController.setZoom(15);
+		
+		marker = getResources().getDrawable(R.drawable.marker);
+		marker.setBounds(0, 0, marker.getIntrinsicWidth(),marker.getIntrinsicHeight());
+		
 
 		saveButton = (Button) findViewById(R.id.saveButton);
 		ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
@@ -108,17 +124,22 @@ public class AddTaskActivity extends MapActivity{
         
         taskLoc = (EditText) findViewById(R.id.taskLocEdit);
         taskText = (EditText) findViewById(R.id.taskDetailEdit);
-        
-        locMapView = (MapView) findViewById(R.id.locMapView);
-		locMapView.setBuiltInZoomControls(true);
-		mapController = locMapView.getController();
-		
-		locMapView.setStreetView(true);
-		mapController.setZoom(15);
-		
-		marker = getResources().getDrawable(R.drawable.marker);
-		marker.setBounds(0, 0, marker.getIntrinsicWidth(),marker.getIntrinsicHeight());
-
+        radiusValue = (TextView) findViewById(R.id.radiusValue);
+        radiusBar = (SeekBar) findViewById(R.id.radiusBar);
+        radiusBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				radiusValue.setText(progress+ 100 + " meter");
+			}
+		});
 			
 		preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		unique_id = preferences.getInt("UNIQUEID", 0);
@@ -131,7 +152,6 @@ public class AddTaskActivity extends MapActivity{
 	    * find location of the given address 
 	    * update map accordingly
 	    */
-		
 	    if(extras != null){
 	        	
 	    	if(extras.getBoolean(SEARCH_REDIRECT) && extras.getString(SEARCH_ADDRESS) != null){
@@ -167,6 +187,8 @@ public class AddTaskActivity extends MapActivity{
 	        	saveButton.setText("Update Task");
 	        	taskLoc.setText(editTask.getTaskLoc());
 	        	taskText.setText(editTask.getTaskText());
+	        	radiusBar.setProgress(editTask.getProx_radius());
+	        	radiusValue.setText(editTask.getProx_radius() + " meter");
 	        	location = new Location(LocationManager.PASSIVE_PROVIDER);
 				location.setLatitude(editTask.getTaskLat());
 				location.setLongitude(editTask.getTaskLon());
@@ -185,7 +207,7 @@ public class AddTaskActivity extends MapActivity{
 			public void onClick(View v) {
 				
 				Task newTask = new Task(taskText.getText().toString(), taskLoc.getText().toString()
-						, location.getLatitude(), location.getLongitude(),0);
+						, location.getLatitude(), location.getLongitude(),0, radiusBar.getProgress()+100);
 				Log.d(TW, newTask.toString());
 				
 				if(!isEditing){ //seems like its a new task insertion
@@ -202,6 +224,7 @@ public class AddTaskActivity extends MapActivity{
 					newTask.setTaskLoc(taskLoc.getText().toString());
 					newTask.setTaskLat(location.getLatitude());
 					newTask.setTaskLon(location.getLongitude());
+					newTask.setProx_radius(radiusBar.getProgress());
 					
 					//update task on db
 					adapter = new TaskListDbAdapter(getApplicationContext());
@@ -232,7 +255,7 @@ public class AddTaskActivity extends MapActivity{
 				anIntent.putExtra(ACTIVE_TASK_TEXT, newTask.getTaskText());
 
 				PendingIntent operation = PendingIntent.getBroadcast(getApplicationContext(), ++unique_id , anIntent, 0);
-				locationManager.addProximityAlert(newTask.getTaskLat(), newTask.getTaskLon(), 2000, -1, operation);
+				locationManager.addProximityAlert(newTask.getTaskLat(), newTask.getTaskLon(), newTask.getProx_radius() , -1, operation);
 				Log.d(TW, "Unique id of the saved profile is : " + unique_id);
 				
 				SharedPreferences.Editor editor = preferences.edit();
@@ -260,10 +283,8 @@ public class AddTaskActivity extends MapActivity{
 	
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
+
 		super.onDestroy();
-		locationManager.removeUpdates(gpsLocationListener);
-		locationManager.removeUpdates(networklocationListener);
 		if(adapter!=null)
 			adapter.close();
 	}

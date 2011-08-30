@@ -17,8 +17,8 @@
 	 	android:id="@+id/emptyMan"
 	 	android:layout_height="wrap_content"
 	 	android:layout_width="wrap_content"
-	 	android:src="@drawable/empty_back"
-	 	android:paddingLeft="60dip"
+	 	android:src="@drawable/empty_back_test"
+	 	android:paddingLeft="50dip"
 	 	android:paddingRight="25dip"
 	 	android:paddingTop="80dip"/>  
 	    

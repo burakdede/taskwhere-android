@@ -12,12 +12,6 @@ import java.io.Serializable;
  */
 public class Task implements Serializable{
 
-
-	
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3762749485709681937L;
 
 	private String taskText;
@@ -31,10 +25,12 @@ public class Task implements Serializable{
 	private int unique_taskid;
 	
 	private int status;
+	
+	private int prox_radius;
 
 	public Task() {}
 	
-	public Task(String taskText, String taskLoc, double taskLat, double taskLon, int unique_taskid){
+	public Task(String taskText, String taskLoc, double taskLat, double taskLon, int unique_taskid, int prox_radius){
 		
 		this.taskText = taskText;
 		this.taskLoc = taskLoc;
@@ -42,11 +38,12 @@ public class Task implements Serializable{
 		this.taskLon = taskLon;
 		this.unique_taskid = unique_taskid;
 		this.status = 0;
+		this.prox_radius = prox_radius;
 	}
 	
-	public Task(String taskText, String taskLoc, double taskLat, double taskLon, int unique_taskid,int status){
+	public Task(String taskText, String taskLoc, double taskLat, double taskLon, int unique_taskid,int status, int prox_radius){
 		
-		this(taskText, taskLoc, taskLat, taskLon, unique_taskid);
+		this(taskText, taskLoc, taskLat, taskLon, unique_taskid, prox_radius);
 		this.status = status;
 	}
 
@@ -96,6 +93,14 @@ public class Task implements Serializable{
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+	
+	public int getProx_radius() {
+		return prox_radius;
+	}
+
+	public void setProx_radius(int prox_radius) {
+		this.prox_radius = prox_radius;
 	}
 	
 	//for debugging

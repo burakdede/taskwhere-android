@@ -63,6 +63,7 @@ xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
 		android:textColor="#17649A"
   		android:gravity="center_vertical|center_horizontal"/>
   	
+  	
   	<EditText
 		android:id="@+id/taskDetailEdit"
 	  	android:layout_width="fill_parent"
@@ -73,6 +74,38 @@ xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
 	  	android:layout_marginRight="10dip"
 		android:ellipsize="end"
 	  	android:scrollHorizontally="true"/>
+	
+	<TextView 
+  		android:id="@+id/radiusText"
+  		android:layout_height="wrap_content"
+  		android:layout_width="fill_parent"
+  		android:text="Proximity Radius : "
+  		android:textStyle="bold"
+		android:textSize="16sp"
+		android:paddingLeft="3dip"
+		android:paddingRight="3dip"
+		android:textColor="#17649A"
+  		android:gravity="center_vertical|center_horizontal"/>
+  	
+  	<TextView 
+  		android:id="@+id/radiusValue"
+  		android:layout_height="wrap_content"
+  		android:layout_width="fill_parent"
+  		android:text="100 meter"
+  		android:textStyle="bold"
+		android:textSize="14sp"
+		android:paddingLeft="3dip"
+		android:paddingRight="3dip"
+		android:textColor="#17649A"
+  		android:gravity="center_vertical|center_horizontal"/>
+  					
+  	<SeekBar
+  		android:id="@+id/radiusBar"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content"
+  		android:max="4900"
+  		android:padding="5dip"
+  		android:soundEffectsEnabled="true"/>
 	  	
 	<TextView 
   		android:id="@+id/taskMapText"
@@ -114,5 +147,6 @@ xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
 	  	android:layout_alignParentBottom="true"
 	  	android:background="@drawable/custom_button_green"
 	  	android:text="Save Task"/>
+	  	
 </LinearLayout>
 </ScrollView>

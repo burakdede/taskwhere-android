@@ -28,7 +28,8 @@ import com.taskwhere.android.widget.QuickAction;
 /**
  * 
  * @author burak
- * @date 26 Aug 2011
+ * @date 26 Aug 2011,
+ * 
  * main activity that show the list 
  * of saved tasks to the user
  */
@@ -119,6 +120,7 @@ public class TaskWhereActivity extends Activity {
 						taskList.get(mSelectedRow).setStatus(1);
 						taskList.set(mSelectedRow, selectedTask);
 						taskListAdapter.updateData();
+						
 						if(dbAdapter.updateTaskByUniqueId(selectedTask)){
 							Log.d(TW, "Updated item succesfully");
 							removeOldProximityAlert(taskList.get(mSelectedRow).getUnique_taskid());
@@ -134,6 +136,7 @@ public class TaskWhereActivity extends Activity {
 							removeOldProximityAlert(selectedTask.getUnique_taskid());
 							taskListAdapter.updateData();
 							
+							//no more task to show change layout
 							if(taskList.size() == 0){
 								getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.tasklist_empty);
 								setContentView(R.layout.tasklist_empty);
@@ -200,7 +203,7 @@ public class TaskWhereActivity extends Activity {
     		taskCursor.moveToFirst();
     		do{
         		taskList.add(new Task(taskCursor.getString(1), taskCursor.getString(2),
-        				taskCursor.getDouble(3), taskCursor.getDouble(4), taskCursor.getInt(5),taskCursor.getInt(6)));
+        				taskCursor.getDouble(3), taskCursor.getDouble(4), taskCursor.getInt(5),taskCursor.getInt(6),taskCursor.getInt(7)));
     		}while(taskCursor.moveToNext());
     	}
     }
@@ -225,6 +228,7 @@ public class TaskWhereActivity extends Activity {
     }
     
     public static Intent createIntent(Context context) {
+
     	Intent i = new Intent(context, TaskWhereActivity.class);
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         return i;
