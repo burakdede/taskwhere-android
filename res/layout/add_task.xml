@@ -145,6 +145,7 @@ xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
 	  	android:textSize="16sp"
 	  	android:textColor="#ffffff"
 	  	android:layout_alignParentBottom="true"
+	  	android:paddingBottom="5dip"
 	  	android:background="@drawable/custom_button_green"
 	  	android:text="Save Task"/>
 	  	

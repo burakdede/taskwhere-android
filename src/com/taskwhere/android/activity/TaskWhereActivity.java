@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -44,7 +45,11 @@ public class TaskWhereActivity extends Activity {
 	private static int mSelectedRow;
 	private final static String EDIT_TASK = "com.taskwhere.android.Task";
 	private static final String ARRIVED_ACTION = "com.taskwhere.android.ARRIVED_ACTION";
+	private static final String ACTIVE_TASK_LOC = "com.taskwhere.android.model.TaskLoc";
+	private static final String ACTIVE_TASK_TEXT = "com.taskwhere.android.model.TaskText";
+	private SharedPreferences preferences;
 	private TaskListAdapter taskListAdapter;
+	private LocationManager locationManager;
 	
 	/**
 	 * setup actionbar pattern using {@link ActionBar}
@@ -79,21 +84,30 @@ public class TaskWhereActivity extends Activity {
             
         	ActionItem addAction = new ActionItem();
 			addAction.setTitle("Edit");
-			addAction.setIcon(getResources().getDrawable(R.drawable.ic_add));
+			addAction.setIcon(getResources().getDrawable(R.drawable.edit));
 	
 			ActionItem accAction = new ActionItem();
 			accAction.setTitle("Mark As Done");
-			accAction.setIcon(getResources().getDrawable(R.drawable.ic_accept));
+			accAction.setIcon(getResources().getDrawable(R.drawable.done));
 			
 			ActionItem upAction = new ActionItem();
 			upAction.setTitle("Delete");
-			upAction.setIcon(getResources().getDrawable(R.drawable.ic_up));
+			upAction.setIcon(getResources().getDrawable(R.drawable.delete));
+			
+			ActionItem activeAction = new ActionItem();
+			activeAction.setTitle("Activate");
+			activeAction.setIcon(getResources().getDrawable(R.drawable.activate));
+			
+			ActionItem deactiveAction = new ActionItem();
+			deactiveAction.setTitle("Deactivate");
+			deactiveAction.setIcon(getResources().getDrawable(R.drawable.deactivate));
 			
 			final QuickAction mQuickAction 	= new QuickAction(this);
 			mQuickAction.addActionItem(addAction);
 			mQuickAction.addActionItem(accAction);
 			mQuickAction.addActionItem(upAction);
-
+			mQuickAction.addActionItem(activeAction);
+			mQuickAction.addActionItem(deactiveAction);
 			
 			/*
 			 * click listener for quick action
@@ -144,7 +158,13 @@ public class TaskWhereActivity extends Activity {
 								setUpActionBar(actionBar);
 							}
 						}
-					}	
+					} else if (pos == 3){
+						
+						removeOldProximityAlert(selectedTask.getUnique_taskid());
+					} else if (pos == 4){
+						
+						activateProximityAlert(selectedTask);
+					}
 				}
 			});
 
@@ -188,6 +208,19 @@ public class TaskWhereActivity extends Activity {
 		PendingIntent operation = 
 				PendingIntent.getBroadcast(getApplicationContext(), unique_taskid , anIntent, 0);
 		locationManager.removeProximityAlert(operation);
+	}
+    
+    private void activateProximityAlert(Task newTask) {
+		
+		String contenxt = Context.LOCATION_SERVICE;
+		locationManager = (LocationManager) getSystemService(contenxt);
+		
+		Intent anIntent = new Intent(ARRIVED_ACTION);
+		anIntent.putExtra(ACTIVE_TASK_LOC, newTask.getTaskLoc());
+		anIntent.putExtra(ACTIVE_TASK_TEXT, newTask.getTaskText());
+
+		PendingIntent operation = PendingIntent.getBroadcast(getApplicationContext(), newTask.getUnique_taskid() , anIntent, 0);
+		locationManager.addProximityAlert(newTask.getTaskLat(), newTask.getTaskLon(), newTask.getProx_radius() , -1, operation);
 	}
 
 	/**

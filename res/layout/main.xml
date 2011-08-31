@@ -43,7 +43,7 @@
 		android:layout_height="wrap_content"
 		android:scrollbars="vertical"
     	android:fadingEdgeLength="0dip"
-		android:drawSelectorOnTop="false"
+		android:drawSelectorOnTop="true"
 		android:dividerHeight="0dip"/>
 		
 </LinearLayout>

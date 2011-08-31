@@ -30,21 +30,21 @@ xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
 	<ImageView 
 		android:id="@+id/infoImage"
 		android:layout_height="wrap_content"
-		android:layout_width="wrap_content"
+		android:layout_width="fill_parent"
 		android:layout_below="@+id/taskHeader"
-		android:src="@drawable/info_item1"/>
+		android:src="@drawable/info_back1"/>
 		
 	<ImageView 
 		android:id="@+id/infoImage2"
 		android:layout_height="wrap_content"
-		android:layout_width="wrap_content"
+		android:layout_width="fill_parent"
 		android:layout_below="@+id/infoImage"
 		android:src="@drawable/info_back2"/>
 		
 	<ImageView 
 		android:id="@+id/infoImage3"
 		android:layout_height="wrap_content"
-		android:layout_width="wrap_content"
+		android:layout_width="fill_parent"
 		android:layout_below="@+id/infoImage2"
 		android:src="@drawable/info_back3"/>
 		
