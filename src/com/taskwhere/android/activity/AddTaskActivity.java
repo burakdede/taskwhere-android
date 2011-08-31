@@ -20,6 +20,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -198,9 +199,16 @@ public class AddTaskActivity extends MapActivity{
 				updateWithNewLocation(location, marker);
 	    	}
 	    }else{
+	    	//its new task
 	        isEditing = false;
-	       	showDialog(1);
-	    	getCurrentLocation();
+	        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	        if(cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnectedOrConnecting()){
+	        		//network enabled go on to find current location
+	        		showDialog(1);
+	    	    	getCurrentLocation();		
+	        }else{
+	        	Toast.makeText(getApplicationContext(), "Seems like your network connectivity is not exist. Try again later...", Toast.LENGTH_LONG).show();
+	        }
 	    }
 	    
 	    saveButton.setOnClickListener(new OnClickListener() {

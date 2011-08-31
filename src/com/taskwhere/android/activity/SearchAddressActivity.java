@@ -71,7 +71,6 @@ public class SearchAddressActivity extends Activity {
 			        startActivity(accepTaskIntent);
 					
 				}else{
-				
 					Log.d(TW, "Search is empty make toast and show");
 					Toast warn = Toast.makeText(getApplicationContext(), "Enter valid address to search", Toast.LENGTH_SHORT);
 					warn.show();
