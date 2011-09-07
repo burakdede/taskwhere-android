@@ -4,14 +4,17 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.taskwhere.android.activity.LocationProxyService;
 import com.taskwhere.android.activity.R;
 import com.taskwhere.android.activity.TaskWhereActivity;
+import com.taskwhere.android.activity.R.drawable;
 
 /**
  * 
@@ -31,23 +34,38 @@ public class ProximityAlertReciever extends BroadcastReceiver{
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		
-		String key = LocationManager.KEY_PROXIMITY_ENTERING;
-		Boolean entering = intent.getBooleanExtra(key,false);
-		
-		Bundle bundle = intent.getExtras();
-		String taskLoc = bundle.getString(ACTIVE_TASK_LOC);
-		String taskText = bundle.getString(ACTIVE_TASK_TEXT);
-
-		if(entering){
-				Log.d(TW, "Entered the proximity area");
-				createNotification(context, "Task : \"" + taskText + "\""
-						,"OH! Near in " + taskLoc + " ?");
-		}else{
-				Log.d(TW, "Quitted from proximity area");
-				Log.d(TW, "Task still did not accomplished");
-				createNotification(context, "Task : \"" + taskText + "\""
-						,"SNAP! Leaving " + taskLoc + " already ?");
+		if( "android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
+			   
+			ComponentName comp = new ComponentName(context.getPackageName(), LocationProxyService.class.getName());
+			ComponentName service = context.startService(new Intent().setComponent(comp));
+			
+			
+			if (null == service){
+			   // something really wrong here
+			   Log.e(TW, "Could not start service " + comp.toString());
+			}else{
+				Log.d(TW, "Service started succesfully via ProximityAlertReciever");
 			}
+		}else{
+			
+			String key = LocationManager.KEY_PROXIMITY_ENTERING;
+			Boolean entering = intent.getBooleanExtra(key,false);
+			
+			Bundle bundle = intent.getExtras();
+			String taskLoc = bundle.getString(ACTIVE_TASK_LOC);
+			String taskText = bundle.getString(ACTIVE_TASK_TEXT);
+
+			if(entering){
+					Log.d(TW, "Entered the proximity area");
+					createNotification(context, "Task : \"" + taskText + "\""
+							,"OH! Near in " + taskLoc + " ?");
+			}else{
+					Log.d(TW, "Quitted from proximity area");
+					Log.d(TW, "Task still did not accomplished");
+					createNotification(context, "Task : \"" + taskText + "\""
+							,"SNAP! Leaving " + taskLoc + " already ?");
+			}
+		}
 	}
 	
 	/**

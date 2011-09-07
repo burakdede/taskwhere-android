@@ -62,7 +62,7 @@ public class TaskWhereActivity extends Activity {
         super.onCreate(savedInstanceState);
         
         Intent intent = new Intent(getApplicationContext(),LocationProxyService.class);
-        startService(intent);
+      	startService(intent);
         
         taskList = new ArrayList<Task>();
         openDatabaseAccess();   
@@ -159,8 +159,8 @@ public class TaskWhereActivity extends Activity {
 								setUpActionBar(actionBar);
 							}
 						}
-					} else if (pos == 3 && (selectedTask.getStatus() != 0 || selectedTask.getStatus() != 1) ){ // deactivate task
-						//no action if its already activated
+					} else if (pos == 3 && selectedTask.getStatus() == -1){ // activate task
+
 						Log.d(TW, "Selected task to activate");
 						selectedTask.setStatus(0);
 						taskList.get(mSelectedRow).setStatus(0);
@@ -168,7 +168,7 @@ public class TaskWhereActivity extends Activity {
 						activateProximityAlert(selectedTask);
 						taskListAdapter.updateData();
 						
-					} else if (pos == 4 && selectedTask.getStatus() == 0){ // activate task
+					} else if (pos == 4 && selectedTask.getStatus() != -1){ // deactivate task
 
 						Log.d(TW, "Selected task to deactivate");
 						selectedTask.setStatus(-1);
