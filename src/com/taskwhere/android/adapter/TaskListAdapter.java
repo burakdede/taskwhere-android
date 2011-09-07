@@ -106,6 +106,8 @@ public class TaskListAdapter extends ArrayAdapter<Task>{
 			holder.taskStatusImage.setImageResource(R.drawable.taskwait);
 		}else if(task.getStatus() == 1){
 			holder.taskStatusImage.setImageResource(R.drawable.taskdone);
+		}else if(task.getStatus() == -1){
+			holder.taskStatusImage.setImageResource(R.drawable.taskdeactivate);
 		}
 		
 		return v;

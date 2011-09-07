@@ -129,7 +129,7 @@ xmlns:app="http://schemas.android.com/apk/res/com.taskwhere.android.activity"
         android:layout_marginRight="15dip"
         android:layout_marginBottom="5dip"
         android:focusableInTouchMode="true"
-        android:apiKey="05iMxp8Mh8hqB-MSL7ars5LQU-XqYl_fYwB9FFg"/>
+        android:apiKey="05iMxp8Mh8houzbGDNh1XBHXWKEQcdjcAESg4pw"/>
         
     <ImageView android:id="@+id/drag"
 		android:layout_width="wrap_content"

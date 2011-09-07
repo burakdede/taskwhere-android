@@ -121,7 +121,7 @@ public class TaskWhereActivity extends Activity {
 					Log.d(TW, "Selected position : " + mSelectedRow);
 					Task selectedTask = taskList.get(mSelectedRow);
 					
-					if (pos == 0) { //edit item 
+					if (pos == 0) { //edit task item 
 						
 						
 						callIntent = new Intent();
@@ -129,7 +129,7 @@ public class TaskWhereActivity extends Activity {
 						callIntent.putExtra(EDIT_TASK, selectedTask);
 						startActivity(callIntent);
 						
-					} else if (pos == 1) { // mark as done
+					} else if (pos == 1 && selectedTask.getStatus() != 1) { // mark as done
 						
 						selectedTask.setStatus(1);
 						taskList.get(mSelectedRow).setStatus(1);
@@ -146,6 +146,7 @@ public class TaskWhereActivity extends Activity {
 						
 						taskList.remove(mSelectedRow);
 						taskListAdapter.updateData();
+						
 						if(dbAdapter.deleteTaskByUniqueId(selectedTask.getUnique_taskid())){
 							Log.d(TW, "Deleted succesfully");
 							removeOldProximityAlert(selectedTask.getUnique_taskid());
@@ -158,12 +159,23 @@ public class TaskWhereActivity extends Activity {
 								setUpActionBar(actionBar);
 							}
 						}
-					} else if (pos == 3){
-						
-						removeOldProximityAlert(selectedTask.getUnique_taskid());
-					} else if (pos == 4){
-						
+					} else if (pos == 3 && (selectedTask.getStatus() != 0 || selectedTask.getStatus() != 1) ){ // deactivate task
+						//no action if its already activated
+						Log.d(TW, "Selected task to activate");
+						selectedTask.setStatus(0);
+						taskList.get(mSelectedRow).setStatus(0);
+						taskList.set(mSelectedRow, selectedTask);
 						activateProximityAlert(selectedTask);
+						taskListAdapter.updateData();
+						
+					} else if (pos == 4 && selectedTask.getStatus() == 0){ // activate task
+
+						Log.d(TW, "Selected task to deactivate");
+						selectedTask.setStatus(-1);
+						taskList.get(mSelectedRow).setStatus(-1);
+						taskList.set(mSelectedRow, selectedTask);
+						removeOldProximityAlert(selectedTask.getUnique_taskid());
+						taskListAdapter.updateData();
 					}
 				}
 			});
