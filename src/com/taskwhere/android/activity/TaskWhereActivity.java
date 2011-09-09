@@ -152,14 +152,14 @@ public class TaskWhereActivity extends Activity {
 							removeOldProximityAlert(selectedTask.getUnique_taskid());
 							taskListAdapter.updateData();
 							
-							//no more task to show change layout
+							//no more task to show, change layout
 							if(taskList.size() == 0){
 								getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.tasklist_empty);
 								setContentView(R.layout.tasklist_empty);
 								setUpActionBar(actionBar);
 							}
 						}
-					} else if (pos == 3 && selectedTask.getStatus() == -1){ // activate task
+					} else if (pos == 3 && (selectedTask.getStatus() == -1 || selectedTask.getStatus() == 1)){ // activate task
 
 						Log.d(TW, "Selected task to activate");
 						selectedTask.setStatus(0);
@@ -167,7 +167,7 @@ public class TaskWhereActivity extends Activity {
 						taskList.set(mSelectedRow, selectedTask);
 						activateProximityAlert(selectedTask);
 						taskListAdapter.updateData();
-						
+						 
 					} else if (pos == 4 && selectedTask.getStatus() != -1){ // deactivate task
 
 						Log.d(TW, "Selected task to deactivate");
