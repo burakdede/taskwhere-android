@@ -40,8 +40,21 @@ public class LocationProxyService extends Service{
 		Log.d(TW, "Registered ProximityIntentReciever succesfully");
 	}
 	
-	
 	@Override
+	public void onStart(Intent intent, int startId) {
+		// TODO Auto-generated method stub
+		super.onStart(intent, startId);
+		Log.d(TW, "Service on start command called");
+		//its one time job, only do this when bootup recieved
+		if(registered){
+			reregisterAlertsBack();
+			Log.d(TW, "Reregistered proximity alerts back via LocationProxyService");
+			registered = false;
+		}
+		Log.d(TW, "Now reregister value of the service is : " + registered);
+	}
+	
+/*	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(TW, "Service on start command called");
 		//its one time job, only do this when bootup recieved
@@ -53,7 +66,7 @@ public class LocationProxyService extends Service{
 		Log.d(TW, "Now reregister value of the service is : " + registered);
 		
 		return START_STICKY;
-	}
+	}*/
 	
 	
 	/*

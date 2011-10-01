@@ -170,7 +170,7 @@ public class AddTaskActivity extends MapActivity{
 	    				if(results.size() >0){
 	    					showDialog(1);
 	    					Address x = results.get(0);
-	    					location = new Location(LocationManager.PASSIVE_PROVIDER);
+	    					location = new Location(LocationManager.NETWORK_PROVIDER);
 	    					location.setLatitude(x.getLatitude());
 	    					location.setLongitude(x.getLongitude());
 	    					updateWithNewLocation(location, marker);
@@ -193,7 +193,7 @@ public class AddTaskActivity extends MapActivity{
 	        	taskText.setText(editTask.getTaskText());
 	        	radiusBar.setProgress(editTask.getProx_radius());
 	        	radiusValue.setText(editTask.getProx_radius() + " meter");
-	        	location = new Location(LocationManager.PASSIVE_PROVIDER);
+	        	location = new Location(LocationManager.NETWORK_PROVIDER);
 				location.setLatitude(editTask.getTaskLat());
 				location.setLongitude(editTask.getTaskLon());
 				updateWithNewLocation(location, marker);
@@ -207,7 +207,7 @@ public class AddTaskActivity extends MapActivity{
 	        		showDialog(1);
 	    	    	getCurrentLocation();		
 	        }else{
-	        	Toast.makeText(getApplicationContext(), "Seems like your network connectivity is not exist. Try again later...", Toast.LENGTH_LONG).show();
+	        	Toast.makeText(getApplicationContext(), "Seems like your network connectivity does not exist. Try again later...", Toast.LENGTH_LONG).show();
 	        }
 	    }
 	    
