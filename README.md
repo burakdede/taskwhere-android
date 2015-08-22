@@ -1,6 +1,6 @@
 # Task Where
 
-![TaskWhere ICon](https://lh3.ggpht.com/oDBmmEmpd8tP3SMQhzP65Bcu5ux4d-xFR2bZptkwQp7YDw43jhUOPcgyv5OQ5CLyqD5u=w300-rw)
+![TaskWhere ICon](https://lh5.ggpht.com/smhzLMEYaqs6Dq_e4V4SN1wGp0Fck1aK21ivRT-zHWH1a7N-Q8jkILTUTXnEVNWGfOw=w300-rw)
 
 > **TaskWhere** is a location aware **task management application** notifies you when you have a task nearby you provided before using proximity alert.
 
